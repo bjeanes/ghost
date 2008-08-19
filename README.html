@@ -1,0 +1,84 @@
+<h1>Ghost 0.0.1</h1>
+
+<p>A gem that allows you to create, list, and modify .local hostnames in 10.5 with ease...</p>
+
+<h1>Requirements</h1>
+
+<p>This command is designed for users of Mac OS X Leopard and relies on a tool which I am pretty 
+sure was not in earlier versions of OS X and definitely isn't in other OSes. This uses the <code>dscl</code>
+command to intelligently add hostnames to the database. An adapter to use the hosts file in other OSes is definitely a possibility, but not a priority at this time. Feel free to add it yourself and I'll merge it.</p>
+
+<h1>Intended Usage</h1>
+
+<p>This gem is designed primarily for web developers who need to add and modify hostnames to their system for virtual hosts on their local/remote web server</p>
+
+<h2>Command</h2>
+
+<pre><code>$ ghost add mydevsite.local
+[Added] mydevsite.local -&gt; 127.0.0.1
+
+$ ghost add staging-server.local 67.207.136.164
+[Added] staging-server -&gt; 67.207.136.164
+
+$ ghost list
+mydevsite.local -&gt; 127.0.0.1
+staging-server  -&gt; 67.207.136.164
+
+$ ghost delete mydevsite.local
+[Deleted] mydevsite.local
+
+$ ghost list
+staging-server  -&gt; 67.207.136.164
+
+$ ghost add staging-server.local 72.14.207.99
+[Error] staging-server.local already exists (-&gt; 67.207.136.164)
+        Use `ghost modify` to change the entry
+
+$ ghost modify staging-server.local 72.14.207.99
+[Modifying] staging-server.local -&gt; 72.14.207.99
+
+$ ghost empty
+Host list has been emptied
+</code></pre>
+
+<h2>Library</h2>
+
+<p>There is also a library that can be used in Ruby scripts. The <code>ghost</code> command is a wrapper for
+the library. View the source of <code>bin/ghost</code> to see how to use the library.</p>
+
+<h2>Sake Task</h2>
+
+<p>I also want to make this available as a Sake task to cater those who use it. It too will be a wrapper for the library. I just have to figure out how I can provide an easy way to install the sake tasks via the gem</p>
+
+<h1>Installation</h1>
+
+<pre><code>sudo gem install bjeanes-ghost --source http://gems.github.com/
+</code></pre>
+
+<h1>Notes</h1>
+
+<p>This library is not fully implemented yet. I am just putting this README up so that you can 
+see what the goals are.</p>
+
+<h1>Legal Stuff</h1>
+
+<p>Copyright (c) 2008 Bodaniel Jeanes</p>
+
+<p>Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:</p>
+
+<p>The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.</p>
+
+<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
