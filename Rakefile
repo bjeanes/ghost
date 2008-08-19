@@ -13,21 +13,19 @@ SUMMARY = "Allows you to create, list, and modify .local hostnames in 10.5 with 
 spec = Gem::Specification.new do |s|
   s.name = GEM
   s.version = GEM_VERSION.join('.')
-  s.platform = Gem::Platform::RUBY
+  s.platform = "universal-darwin-9" # perhaps other *darwin* platforms...
   s.has_rdoc = true
   s.extra_rdoc_files = ["README", "LICENSE", 'TODO']
+  s.rdoc_options << '--title Ghost' << '--main README' << '--line-numbers'
   s.summary = SUMMARY
   s.description = s.summary
   s.author = AUTHOR
   s.email = EMAIL
   s.homepage = HOMEPAGE
-  
-  # Uncomment this to add a dependency
-  # s.add_dependency "foo"
-  
-  s.require_path = 'lib'
+  s.requirements << 'Mac OS X Leopard (10.5)'
+  s.executables << 'ghost'
   s.autorequire = GEM
-  s.files = %w(LICENSE README Rakefile TODO) + Dir.glob("{lib,specs}/**/*")
+  s.files = %w(LICENSE README Rakefile TODO) + Dir.glob("{bin,lib,specs}/**/*")
 end
 
 Rake::GemPackageTask.new(spec) do |pkg|
