@@ -57,6 +57,7 @@ describe Host do
     Host.add(hostname, ip)
     host.ip.should eql(ip)
   end
+  
   it "should have a hostname" do
     hostname = 'ghost-test-hostname.local'
     
@@ -70,6 +71,7 @@ describe Host do
     Host.add(hostname, ip)
     host.hostname.should eql(hostname)
   end
+  
   it ".to_s should return hostname" do
     hostname = 'ghost-test-hostname.local'
     

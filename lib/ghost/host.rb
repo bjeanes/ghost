@@ -1,7 +1,7 @@
 class Host
   ListCmd = "dscl localhost -list /Local/Default/Hosts 2>&1"
   ReadCmd = "dscl localhost -read /Local/Default/Hosts/%s 2>&1"
-  CreateCmd = "sudo dscl localhost -create /Local/Default/Host/%s IPADDRESS %s 2>&1"
+  CreateCmd = "sudo dscl localhost -create /Local/Default/Hosts/%s IPADDRESS %s 2>&1"
   DeleteCmd = "sudo dscl localhost -delete /Local/Default/Hosts/%s 2>&1"
   
   class << self
