@@ -15,22 +15,6 @@ describe Host, ".list" do
     Host.add('ghost-test-hostname.local')
     Host.list.first.should be_instance_of(Host)
   end
-  
-  it "should cache hostname listing" do
-    host = 'ghost-test-hostname.local'
-    Host.add(host)
-    Host.list.should have(1).thing
-    `#{Host::CreateCmd % [host, '127.0.0.1']}`
-    Host.list.should have(1).thing
-  end
-  
-  it "should not fetch listing from cache if told not to" do
-    host = 'ghost-test-hostname.local'
-    Host.add(host)
-    Host.list.should have(1).thing
-    `#{Host::CreateCmd % [host, '127.0.0.1']}`
-    Host.list(true).should have(2).thing
-  end
 end
 
 describe Host do
@@ -119,13 +103,6 @@ describe Host, ".add" do
     Host.list.first.ip.should eql('10.0.0.1')
     
     Host.list.should have(1).thing
-  end
-  
-  it "should invalidate the Host.list cache" do
-    Host.add('ghost-test-hostname.local')
-    Host.list.should have(1).thing
-    Host.add('ghost-other-hostname.local')
-    Host.list.should have(2).thing # refetched list
   end
 end
 

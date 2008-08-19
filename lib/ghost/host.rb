@@ -7,13 +7,9 @@ class Host
   class << self
     protected :new
     
-    def list(bypass_cache = false)
-      if bypass_cache
-        @cache = nil
-        get_list
-      else
-        @cache ||= get_list
-      end
+    def list
+      list = `#{ListCmd}`
+      list.collect { |host| Host.new(host.chomp) }
     end
 
     def add(host, ip = "127.0.0.1", force = false)
@@ -60,16 +56,10 @@ class Host
     def flush!
       `dscacheutil -flushcache`
       @hosts = {}
-      @cache = nil
       true
     end
     
     protected
-    def get_list
-      list = `#{ListCmd}`
-      list.collect { |host| Host.new(host.chomp) }
-    end
-    
     def parse_host(output)
       parse_value(output, 'RecordName')
     end
