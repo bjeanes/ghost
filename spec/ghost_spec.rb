@@ -24,22 +24,26 @@ describe Host, ".list" do
   end
   
   it "should cache hostname listing" do
-    Host.add('ghost-test-hostname.local')
+    host = 'ghost-test-hostname.local'
+    Host.add(host)
     Host.list.should have(1).thing
-    `sudo dscl localhost -create /Local/Default/Hosts/ghost-other-hostname.local IPAddress 127.0.0.1` # don't want to use the Host.add because this should invalidate cache
+    
+    `sudo dscl localhost -create /Local/Default/Hosts/#{host} IPAddress 127.0.0.1`
     Host.list.should have(1).thing
   end
   
   it "should not fetch listing from cache if told not to" do
-    Host.add('ghost-test-hostname.local')
+    host = 'ghost-test-hostname.local'
+    Host.add(host)
     Host.list.should have(1).thing
-    `sudo dscl localhost -create /Local/Default/Hosts/ghost-other-hostname.local IPAddress 127.0.0.1` # don't want to use the Host.add because this should invalidate cache
+    `sudo dscl localhost -create /Local/Default/Hosts/#{host} IPAddress 127.0.0.1`
     Host.list(true).should have(2).thing
   end
 end
 
 describe Host do
   after(:each) { Host.empty! }
+  
   it "should have an IP" do
     hostname = 'ghost-test-hostname.local'
     
@@ -75,11 +79,29 @@ describe Host do
   end
 end
 
+describe Host, "finder methods" do
+  after(:all) { Host.empty! }
+  before(:all) do
+    Host.add('abc.local')
+    Host.add('def.local')
+    Host.add('efg.local', '10.2.2.4')
+  end
+  
+  it "should return valid Host when searching for host name" do
+    Host.find_by_host('abc.local').should be_instance_of(Host)
+  end
+  
+end
+
 describe Host, ".add" do
   after(:each) { Host.empty! }
-  it "should return true when passed hostname" do
-    Host.add('ghost-test-hostname.local').should be_true
-    Host.delete('ghost-test-hostname.local') # remove hostname when done
+  
+  it "should return Host object when passed hostname" do
+    Host.add('ghost-test-hostname.local').should be_instance_of(Host)
+  end
+  
+  it "should return Host object when passed hostname" do
+    Host.add('ghost-test-hostname.local', '10.0.0.2').should be_instance_of(Host)
   end
   
   it "should not add duplicates" do
