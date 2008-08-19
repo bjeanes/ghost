@@ -18,7 +18,7 @@ task :todo do
   files = ["**/*.{rb,rake}" "bin/*", "README.mkdn"]
   
   File.open('TODO','w') do |f|
-      FileList[*files].egrep(/TODO/) do |file, line, text|
+      FileList[*files].egrep(/TODO|FIXME/) do |file, line, text|
       output = "#{file}:#{line} - #{text.chomp.gsub(/^\s+|\s+$/ , "")}"
     
       puts output
