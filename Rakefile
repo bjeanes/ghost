@@ -7,7 +7,7 @@ Dir['tasks/**/*.rake'].each { |rake| load rake }
 
 GEM = "ghost"
 GEM_VERSION = [0,0,1]
-PLATFORM = "universal-darwin-9" # perhaps other *darwin* platforms...
+GEM_PLATFORM = "universal-darwin-9" # perhaps other *darwin* platforms...
 AUTHOR = "Bodaniel Jeanes"
 EMAIL = "me@bjeanes.com"
 HOMEPAGE = "http://github.com/bjeanes/ghost"
@@ -21,7 +21,7 @@ end
 spec = Gem::Specification.new do |s|
   s.name = GEM
   s.version = GEM_VERSION.join('.')
-  s.platform = PLATFORM
+  s.platform = GEM_PLATFORM
   s.has_rdoc = true
   s.extra_rdoc_files = ["README", "LICENSE", 'TODO']
   s.rdoc_options << '--title Ghost' << '--main README' << '--line-numbers'
@@ -42,7 +42,7 @@ end
 
 desc "Install the gem locally"
 task :install => [:package] do
-  sh %{sudo gem install pkg/#{GEM}-#{GEM_VERSION.join('.')}-#{PLATFORM}}
+  sh %{sudo gem install pkg/#{GEM}-#{GEM_VERSION.join('.')}-#{GEM_PLATFORM}}
 end
 
 desc "Create a gemspec file"
