@@ -5,3 +5,9 @@ describe Host, ".list" do
     Host.list.should be_instance_of(Array)
   end
 end
+
+describe Host, ".add" do
+  it "should return true" do
+    Host.add.should be_instance_of(Array)
+  end
+end
