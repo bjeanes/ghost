@@ -17,18 +17,10 @@ describe Host, ".list" do
   end
   
   it "should cache hostname listing" do
-    Host.add('ghost-test-hostname.local')
-    Host.list.should have(1).thing
-    Host.add('ghost-other-hostname.local')
-    Host.list.should have(1).thing
-  end
-  
-  it "should cache hostname listing" do
     host = 'ghost-test-hostname.local'
     Host.add(host)
     Host.list.should have(1).thing
-    
-    `sudo dscl localhost -create /Local/Default/Hosts/#{host} IPAddress 127.0.0.1`
+    `#{Host::CreateCmd % [host, '127.0.0.1']}`
     Host.list.should have(1).thing
   end
   
@@ -36,7 +28,7 @@ describe Host, ".list" do
     host = 'ghost-test-hostname.local'
     Host.add(host)
     Host.list.should have(1).thing
-    `sudo dscl localhost -create /Local/Default/Hosts/#{host} IPAddress 127.0.0.1`
+    `#{Host::CreateCmd % [host, '127.0.0.1']}`
     Host.list(true).should have(2).thing
   end
 end
@@ -51,10 +43,10 @@ describe Host do
     host = Host.list.first
     host.ip.should eql('127.0.0.1')
     
-    host.empty!
+    Host.empty!
     
     ip = '169.254.23.121'
-    Host.add(hostname, ip)
+    host = Host.add(hostname, ip)
     host.ip.should eql(ip)
   end
   
@@ -65,7 +57,7 @@ describe Host do
     host = Host.list.first
     host.hostname.should eql(hostname)
     
-    host.empty!
+    Host.empty!
     
     ip = '169.254.23.121'
     Host.add(hostname, ip)
@@ -106,17 +98,10 @@ describe Host, ".add" do
     Host.add('ghost-test-hostname.local', '10.0.0.2').should be_instance_of(Host)
   end
   
-  it "should not add duplicates" do
+  it "should raise error if hostname already exists and not add a duplicate" do
     Host.empty!
     Host.add('ghost-test-hostname.local')
-    Host.add('ghost-test-hostname.local')
-    Host.list.should have(1).thing
-  end
-  
-  it "should raise error if hostname already exists" do
-    Host.empty!
-    Host.add('ghost-test-hostname.local')
-    Host.add('ghost-test-hostname.local').should raise_error
+    lambda { Host.add('ghost-test-hostname.local') }.should raise_error
     Host.list.should have(1).thing
   end
   

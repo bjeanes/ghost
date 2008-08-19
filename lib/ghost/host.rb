@@ -1,7 +1,7 @@
 class Host
   ListCmd = "dscl localhost -list /Local/Default/Hosts 2>&1"
   ReadCmd = "dscl localhost -read /Local/Default/Hosts/%s 2>&1"
-  CreateCmd = "sudo dscl localhost -create /Local/Default/Hosts/%s IPADDRESS %s 2>&1"
+  CreateCmd = "sudo dscl localhost -create /Local/Default/Hosts/%s IPAddress %s 2>&1"
   DeleteCmd = "sudo dscl localhost -delete /Local/Default/Hosts/%s 2>&1"
   
   class << self
@@ -9,28 +9,36 @@ class Host
     
     def list(bypass_cache = false)
       if bypass_cache
-        @cache = get_list
+        @cache = nil
+        get_list
       else
         @cache ||= get_list
       end
     end
 
-    def add(host, ip = "127.0.0.1")
-      `#{CreateCmd % [host, ip]}`
-      flush!
-      find_by_host(host)
+    def add(host, ip = "127.0.0.1", force = false)
+      if find_by_host(host).nil? || force
+        `#{CreateCmd % [host, ip]}`
+        flush!
+        find_by_host(host)
+      else
+        raise "Can not overwrite existing record"
+      end      
     end
     
     def find_by_host(host)
-      output = `#{ReadCmd % host}`
+      @hosts ||= {}
+      @hosts[host] ||= begin
+        output = `#{ReadCmd % host}`
       
-      if output =~ /eDSRecordNotFound/
-        nil
-      else
-        host = parse_host(output)
-        ip = parse_ip(output)
+        if output =~ /eDSRecordNotFound/
+          nil
+        else
+          host = parse_host(output)
+          ip = parse_ip(output)
         
-        Host.new(host, ip)
+          Host.new(host, ip)
+        end
       end
     end
     
@@ -39,7 +47,8 @@ class Host
     end
     
     def empty!
-      list.each {|h| delete(h) }
+      list.each { |h| delete(h) }
+      nil
     end
     
     def delete(host)
@@ -50,6 +59,7 @@ class Host
     # Flushes the DNS Cache
     def flush!
       `dscacheutil -flushcache`
+      @hosts = {}
       @cache = nil
       true
     end
