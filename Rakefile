@@ -10,6 +10,11 @@ EMAIL = "me@bjeanes.com"
 HOMEPAGE = "http://github.com/bjeanes/ghost"
 SUMMARY = "Allows you to create, list, and modify .local hostnames in 10.5 with ease"
 
+desc "list tasks"
+task :default do
+  puts `rake -T`.grep(/^[^(].*$/)
+end
+
 spec = Gem::Specification.new do |s|
   s.name = GEM
   s.version = GEM_VERSION.join('.')
