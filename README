@@ -1,7 +1,7 @@
 Ghost 0.0.1
 ===========
 
-A gem that allows you to create, list, and modify .local hostnames in 10.5 with ease...
+A gem that allows you to create, list, and modify local hostnames in 10.5 with ease...
 
 Requirements
 ============
@@ -13,7 +13,7 @@ command to intelligently add hostnames to the database. An adapter to use the ho
 Intended Usage
 ==============
 
-This gem is designed primarily for web developers who need to add and modify hostnames to their system for virtual hosts on their local/remote web server
+This gem is designed primarily for web developers who need to add and modify hostnames to their system for virtual hosts on their local/remote web server. However, it could be of use to other people who would otherwise modify their `/etc/hosts` file and flush the cache.
 
 Command
 -------
