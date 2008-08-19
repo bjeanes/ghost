@@ -14,7 +14,7 @@ spec = Gem::Specification.new do |s|
   s.platform = GEM_PLATFORM
   s.has_rdoc = true
   s.extra_rdoc_files = ["README", "LICENSE", 'TODO']
-  s.rdoc_options << '--title Ghost' << '--main README' << '--line-numbers'
+  s.rdoc_options << '--line-numbers'
   s.summary = SUMMARY
   s.description = s.summary
   s.author = AUTHOR

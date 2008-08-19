@@ -12,7 +12,7 @@ end
 
 def help_text(exit_code = 0)
   script_name = File.basename $0
-  puts """USAGE: #{script_name} add <hostname> [<ip=127.0.1.0>]
+  puts """USAGE: #{script_name} add <hostname> [<ip=127.0.1.1>]
        #{script_name} delete <hostname>
        #{script_name} list
        #{script_name} empty

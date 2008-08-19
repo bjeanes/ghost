@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
   s.files = ["LICENSE", "README", "Rakefile", "TODO", "bin/ghost", "lib/ghost", "lib/ghost/host.rb", "lib/ghost.rb", "spec/ghost_spec.rb", "spec/spec.opts", "spec/spec_helper.rb"]
   s.has_rdoc = true
   s.homepage = %q{http://github.com/bjeanes/ghost}
-  s.rdoc_options = ["--title Ghost", "--main README", "--line-numbers"]
+  s.rdoc_options = ["--line-numbers"]
   s.require_paths = ["lib"]
   s.requirements = ["Mac OS X Leopard (10.5)"]
   s.rubygems_version = %q{1.2.0}
