@@ -84,6 +84,7 @@ class Host
   end
   alias :to_s :hostname
   alias :host :hostname
+  alias :name :hostname
   
   def ip
     @ip ||= self.class.send(:parse_ip, dump)
