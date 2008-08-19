@@ -19,30 +19,19 @@ Command
 -------
 
     $ ghost add mydevsite.local
-    [Added] mydevsite.local -> 127.0.0.1
-
     $ ghost add staging-server.local 67.207.136.164
-    [Added] staging-server -> 67.207.136.164
-
     $ ghost list
-    mydevsite.local -> 127.0.0.1
-    staging-server  -> 67.207.136.164
-    
-    $ ghost delete mydevsite.local
-    [Deleted] mydevsite.local
-    
+    Listing 2 host(s):
+      mydevsite.local      -> 127.0.0.1
+      staging-server.local -> 67.207.136.164
+    $ ghost delete mydevsite.local    
     $ ghost list
-    staging-server  -> 67.207.136.164
-    
-    $ ghost add staging-server.local 72.14.207.99
-    [Error] staging-server.local already exists (-> 67.207.136.164)
-            Use `ghost modify` to change the entry
-            
-    $ ghost modify staging-server.local 72.14.207.99
-    [Modifying] staging-server.local -> 72.14.207.99
-    
+    Listing 1 host(s):
+      staging-server -> 67.207.136.164    
     $ ghost empty
-    Host list has been emptied
+    Emptied host list.
+    $ ghost list
+    Listing 0 host(s):
 
 Library
 -------
