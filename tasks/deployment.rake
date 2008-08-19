@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + '/rake_helper'
 
 GEM = "ghost"
-GEM_VERSION = [0,0,1]
+GEM_VERSION = [0,1,0]
 GEM_PLATFORM = "universal-darwin-9" # perhaps other *darwin* platforms...
 AUTHOR = "Bodaniel Jeanes"
 EMAIL = "me@bjeanes.com"

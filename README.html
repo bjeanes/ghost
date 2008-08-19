@@ -1,4 +1,4 @@
-<h1>Ghost 0.0.1</h1>
+<h1>Ghost 0.1.0</h1>
 
 <p>A gem that allows you to create, list, and modify local hostnames in 10.5 with ease...</p>
 
@@ -15,19 +15,30 @@ command to intelligently add hostnames to the database. An adapter to use the ho
 <h2>Command</h2>
 
 <pre><code>$ ghost add mydevsite.local
+[Added] mydevsite.local -&gt; 127.0.0.1
+
 $ ghost add staging-server.local 67.207.136.164
+[Added] staging-server -&gt; 67.207.136.164
+
 $ ghost list
-Listing 2 host(s):
-  mydevsite.local      -&gt; 127.0.0.1
-  staging-server.local -&gt; 67.207.136.164
-$ ghost delete mydevsite.local    
+mydevsite.local -&gt; 127.0.0.1
+staging-server  -&gt; 67.207.136.164
+
+$ ghost delete mydevsite.local
+[Deleted] mydevsite.local
+
 $ ghost list
-Listing 1 host(s):
-  staging-server -&gt; 67.207.136.164    
+staging-server  -&gt; 67.207.136.164
+
+$ ghost add staging-server.local 72.14.207.99
+[Error] staging-server.local already exists (-&gt; 67.207.136.164)
+        Use `ghost modify` to change the entry
+
+$ ghost modify staging-server.local 72.14.207.99
+[Modifying] staging-server.local -&gt; 72.14.207.99
+
 $ ghost empty
-Emptied host list.
-$ ghost list
-Listing 0 host(s):
+Host list has been emptied
 </code></pre>
 
 <h2>Library</h2>
