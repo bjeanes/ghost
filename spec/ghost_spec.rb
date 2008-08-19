@@ -2,8 +2,11 @@ require File.dirname(__FILE__) + '/spec_helper'
 
 # Warning: these tests will delete all hostnames in the system. Please back them up first
 
+Host.empty!
+
 describe Host, ".list" do
   after(:each) { Host.empty! }
+  
   it "should return an array" do
     Host.list.should be_instance_of(Array)
   end
@@ -13,7 +16,26 @@ describe Host, ".list" do
     Host.list.first.should be_instance_of(Host)
   end
   
-  it "should cache lists"
+  it "should cache hostname listing" do
+    Host.add('ghost-test-hostname.local')
+    Host.list.should have(1).thing
+    Host.add('ghost-other-hostname.local')
+    Host.list.should have(1).thing
+  end
+  
+  it "should cache hostname listing" do
+    Host.add('ghost-test-hostname.local')
+    Host.list.should have(1).thing
+    `sudo dscl localhost -create /Local/Default/Hosts/ghost-other-hostname.local IPAddress 127.0.0.1` # don't want to use the Host.add because this should invalidate cache
+    Host.list.should have(1).thing
+  end
+  
+  it "should not fetch listing from cache if told not to" do
+    Host.add('ghost-test-hostname.local')
+    Host.list.should have(1).thing
+    `sudo dscl localhost -create /Local/Default/Hosts/ghost-other-hostname.local IPAddress 127.0.0.1` # don't want to use the Host.add because this should invalidate cache
+    Host.list(true).should have(2).thing
+  end
 end
 
 describe Host do
@@ -88,6 +110,13 @@ describe Host, ".add" do
     Host.list.first.ip.should eql('10.0.0.1')
     
     Host.list.should have(1).thing
+  end
+  
+  it "should invalidate the Host.list cache" do
+    Host.add('ghost-test-hostname.local')
+    Host.list.should have(1).thing
+    Host.add('ghost-other-hostname.local')
+    Host.list.should have(2).thing # refetched list
   end
 end
 
