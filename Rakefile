@@ -3,6 +3,8 @@ require 'rake/gempackagetask'
 require 'rubygems/specification'
 require 'date'
 
+Dir['tasks/**/*.rake'].each { |rake| load rake }
+
 GEM = "ghost"
 GEM_VERSION = [0,0,1]
 AUTHOR = "Bodaniel Jeanes"
