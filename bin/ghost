@@ -10,10 +10,25 @@ rescue LoadError
   # no rubygems to load, so we fail silently
 end
 
-require 'optparse'
-
-# NOTE: the option -p/--path= is given as an example, and should probably be replaced in your application.
-
 OPTIONS = {
   :ip => '127.0.0.1'
 }
+
+script_name = File.basename $0
+
+if ARGV.size.zero? || ['-h', '--help', 'help'].include?(ARGV.first)
+  puts """USAGE: #{script_name} add <hostname> [<ip=127.0.0.1>]
+       #{script_name} delete <hostname>
+       #{script_name} list
+       #{script_name} empty
+"""
+else
+  case ARGV[0]
+  when 'add':
+  when 'delete':
+  when 'list':
+  when 'empty':
+  else
+    $stderr.puts "Invalid option: #{ARGV[0]}"
+  end
+end
