@@ -30,7 +30,7 @@ spec = Gem::Specification.new do |s|
   s.requirements << 'Mac OS X Leopard (10.5)'
   s.executables << 'ghost'
   s.autorequire = GEM
-  s.files = %w(LICENSE README Rakefile TODO) + Dir.glob("{bin,lib,specs}/**/*")
+  s.files = %w(LICENSE README Rakefile TODO) + Dir.glob("{bin,lib,spec}/**/*")
 end
 
 Rake::GemPackageTask.new(spec) do |pkg|
