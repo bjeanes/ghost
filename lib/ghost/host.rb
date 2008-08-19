@@ -51,6 +51,7 @@ class Host
     def flush!
       `dscacheutil -flushcache`
       @cache = nil
+      true
     end
     
     protected
@@ -79,9 +80,10 @@ class Host
   end
   
   def hostname
-    @hostname
+    @host
   end
   alias :to_s :hostname
+  alias :host :hostname
   
   def ip
     @ip ||= self.class.send(:parse_ip, dump)
