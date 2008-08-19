@@ -29,10 +29,16 @@ else
       ARGV.shift
       Host.add(*ARGV)
     else
-      $stderr.puts "Incorrect add syntax."
+      $stderr.puts "The add subcommand requires at least a hostname.\n\n"
       help_text 2
     end
   when 'delete':
+    if ARGV.size == 2
+      Host.delete(ARGV[1])
+    else  
+      $stderr.puts "The delete subcommand requires a hostname.\n\n"
+      help_text 2
+    end
   when 'list':
     hosts = Host.list
     pad = hosts.max{|a,b| a.to_s.length <=> b.to_s.length }.to_s.length
@@ -42,7 +48,11 @@ else
     hosts.each do |host|
       puts "#{host.name.rjust(pad+2)} -> #{host.ip}"
     end
+    exit 0
   when 'empty':
+    Host.empty!
+    puts "Emptied host list."
+    exit 0
   else
     $stderr.puts "Invalid option: #{ARGV[0]}"
     help_text 1
