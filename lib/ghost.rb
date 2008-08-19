@@ -1,3 +1,6 @@
+$: << File.dirname(__FILE__)
+require 'ghost/host'
+
 =begin
   showing hosts
       dscl localhost -list /Local/Default/Hosts
