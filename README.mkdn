@@ -48,12 +48,6 @@ Installation
 ============
 
     sudo gem install bjeanes-ghost --source http://gems.github.com/
-    
-Notes
-=====
-
-This library is not fully implemented yet. I am just putting this README up so that you can 
-see what the goals are.
 
 Legal Stuff
 ===========
