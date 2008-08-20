@@ -13,6 +13,7 @@ end
 def help_text(exit_code = 0)
   script_name = File.basename $0
   puts """USAGE: #{script_name} add <hostname> [<ip=127.0.1.1>]
+       #{script_name} modify <hostname> <ip>
        #{script_name} delete <hostname>
        #{script_name} list
        #{script_name} empty
@@ -26,17 +27,35 @@ else
   case ARGV[0]
   when 'add':
     if [2,3].include?(ARGV.size)
-      ARGV.shift
-      host = Host.add(*ARGV)
-      puts "  [Adding] #{host.name} -> #{host.ip}"
+      begin
+        ARGV.shift
+        host = Host.add(*ARGV)
+        puts "  [Adding] #{host.name} -> #{host.ip}"
+        exit 0
+      rescue
+        $stderr.puts "Cannot overwrite an existing entry. Use the modify subcommand"
+        exit 3
+      end
     else
       $stderr.puts "The add subcommand requires at least a hostname.\n\n"
       help_text 2
+    end
+  when 'modify':
+    if ARGV.size == 3
+      ARGV.shift
+      ARGV << true
+      host = Host.add(*ARGV)
+      puts "  [Modifying] #{host.name} -> #{host.ip}"
+      exit 0
+    else
+      $stderr.puts "The modify subcommand requires a hostname and an IP.\n\n"
+      help_text 4
     end
   when 'delete':
     if ARGV.size == 2
       Host.delete(ARGV[1])
       puts "  [Deleting] #{ARGV[1]}"
+      exit 0
     else  
       $stderr.puts "The delete subcommand requires a hostname.\n\n"
       help_text 2
