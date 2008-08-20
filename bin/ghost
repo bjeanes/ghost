@@ -27,7 +27,8 @@ else
   when 'add':
     if [2,3].include?(ARGV.size)
       ARGV.shift
-      Host.add(*ARGV)
+      host = Host.add(*ARGV)
+      puts "  [Adding] #{host.name} -> #{host.ip}"
     else
       $stderr.puts "The add subcommand requires at least a hostname.\n\n"
       help_text 2
@@ -35,6 +36,7 @@ else
   when 'delete':
     if ARGV.size == 2
       Host.delete(ARGV[1])
+      puts "  [Deleting] #{ARGV[1]}"
     else  
       $stderr.puts "The delete subcommand requires a hostname.\n\n"
       help_text 2
@@ -49,9 +51,10 @@ else
       puts "#{host.name.rjust(pad+2)} -> #{host.ip}"
     end
     exit 0
-  when 'empty':
+  when 'empty':  
+    print "  [Emptying] "
     Host.empty!
-    puts "Emptied host list."
+    puts "Done."
     exit 0
   else
     $stderr.puts "Invalid option: #{ARGV[0]}"
