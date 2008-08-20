@@ -15,17 +15,33 @@ command to intelligently add hostnames to the database. An adapter to use the ho
 <h2>Command</h2>
 
 <pre><code>$ ghost add mydevsite.local
+  [Adding] mydevsite.local -&gt; 127.0.0.1
+
 $ ghost add staging-server.local 67.207.136.164
+  [Adding] staging-server.local -&gt; 67.207.136.164
+
 $ ghost list
 Listing 2 host(s):
   mydevsite.local      -&gt; 127.0.0.1
   staging-server.local -&gt; 67.207.136.164
-$ ghost delete mydevsite.local    
+
+$ ghost delete mydevsite.local
+  [Deleting] mydevsite.local
+
 $ ghost list
 Listing 1 host(s):
-  staging-server -&gt; 67.207.136.164    
+  staging-server.local -&gt; 67.207.136.164
+
+$ ghost modify staging-server.local 64.233.167.99
+  [Modifying] staging-server.local -&gt; 64.233.167.99
+
+$ ghost list
+Listing 1 host(s):
+  staging-server.local -&gt; 64.233.167.99
+
 $ ghost empty
-Emptied host list.
+  [Emptying] Done.
+
 $ ghost list
 Listing 0 host(s):
 </code></pre>
