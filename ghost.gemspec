@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Bodaniel Jeanes"]
   s.autorequire = %q{ghost}
-  s.date = %q{2008-08-20}
+  s.date = %q{2008-09-19}
   s.default_executable = %q{ghost}
   s.description = %q{Allows you to create, list, and modify .local hostnames in 10.5 with ease}
   s.email = %q{me@bjeanes.com}
@@ -18,6 +18,7 @@ Gem::Specification.new do |s|
   s.rdoc_options = ["--line-numbers"]
   s.require_paths = ["lib"]
   s.requirements = ["Mac OS X Leopard (10.5)"]
+  s.rubyforge_project = %q{ghost}
   s.rubygems_version = %q{1.2.0}
   s.summary = %q{Allows you to create, list, and modify .local hostnames in 10.5 with ease}
 
