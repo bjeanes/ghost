@@ -10,6 +10,7 @@ SUMMARY = "Allows you to create, list, and modify .local hostnames in 10.5 with 
 
 spec = Gem::Specification.new do |s|
   s.name = GEM
+  s.rubyforge_project = GEM
   s.version = GEM_VERSION.join('.')
   s.platform = GEM_PLATFORM
   s.has_rdoc = true
