@@ -63,7 +63,7 @@ I also want to make this available as a Sake task to cater those who use it. It 
 Installation
 ============
 
-    sudo gem install bjeanes-ghost --source http://gems.github.com/
+    sudo gem install ghost
 
 Legal Stuff
 ===========
