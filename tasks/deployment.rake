@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + '/rake_helper'
 
 GEM = "ghost"
-GEM_VERSION = [0,1,2]
+GEM_VERSION = [0,2,0]
 GEM_PLATFORM = "universal-darwin-9" # perhaps other *darwin* platforms...
 AUTHOR = "Bodaniel Jeanes"
 EMAIL = "me@bjeanes.com"
@@ -12,7 +12,7 @@ spec = Gem::Specification.new do |s|
   s.name = GEM
   s.rubyforge_project = GEM
   s.version = GEM_VERSION.join('.')
-  s.platform = GEM_PLATFORM
+  # s.platform = GEM_PLATFORM
   s.has_rdoc = true
   s.extra_rdoc_files = ["README", "LICENSE", 'TODO']
   s.rdoc_options << '--line-numbers'
@@ -21,7 +21,7 @@ spec = Gem::Specification.new do |s|
   s.author = AUTHOR
   s.email = EMAIL
   s.homepage = HOMEPAGE
-  s.requirements << 'Mac OS X Leopard (10.5)'
+  # s.requirements << 'Mac OS X Leopard (10.5)'
   s.executables << 'ghost'
   s.autorequire = GEM
   s.files = %w(LICENSE README Rakefile TODO) + Dir.glob("{bin,lib,spec}/**/*")
@@ -33,7 +33,7 @@ end
 
 desc "Install the gem locally"
 task :install => [:package] do
-  sh %{sudo gem install pkg/#{GEM}-#{GEM_VERSION.join('.')}-#{GEM_PLATFORM}}
+  sh %{sudo gem install pkg/#{GEM}-#{GEM_VERSION.join('.')}}
 end
 
 desc "Create a gemspec file"
