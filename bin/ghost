@@ -5,10 +5,10 @@
 
 begin
   require 'rubygems'
-  require 'ghost'
 rescue LoadError
   # no rubygems to load, so we fail silently
 end
+require 'ghost'
 
 def help_text(exit_code = 0)
   script_name = File.basename $0
