@@ -1,16 +1,19 @@
 <h1>Ghost</h1>
 
-<p>A gem that allows you to create, list, and modify local hostnames in 10.5 with ease...</p>
+<p>A gem that allows you to create, list, and modify local hostnames
+with ease in linux and OS (more to come)...</p>
 
 <h1>Requirements</h1>
 
-<p>This command is designed for users of Mac OS X Leopard and relies on a tool which I am pretty 
-sure was not in earlier versions of OS X and definitely isn't in other OSes. This uses the <code>dscl</code>
-command to intelligently add hostnames to the database. An adapter to use the hosts file in other OSes is definitely a possibility, but not a priority at this time. Feel free to add it yourself and I'll merge it.</p>
+<p>Unix-based OS (for now)</p>
 
 <h1>Intended Usage</h1>
 
-<p>This gem is designed primarily for web developers who need to add and modify hostnames to their system for virtual hosts on their local/remote web server. However, it could be of use to other people who would otherwise modify their <code>/etc/hosts</code> file and flush the cache.</p>
+<p>This gem is designed primarily for web developers who need to add
+and modify hostnames to their system for virtual hosts on their
+local/remote web server. However, it could be of use to other people
+who would otherwise modify their <code>/etc/hosts</code> file manually and
+flush the cache.</p>
 
 <h2>Command</h2>
 
@@ -48,17 +51,22 @@ Listing 0 host(s):
 
 <h2>Library</h2>
 
-<p>There is also a library that can be used in Ruby scripts. The <code>ghost</code> command is a wrapper for
-the library. View the source of <code>bin/ghost</code> to see how to use the library.</p>
-
-<h2>Sake Task</h2>
-
-<p>I also want to make this available as a Sake task to cater those who use it. It too will be a wrapper for the library. I just have to figure out how I can provide an easy way to install the sake tasks via the gem</p>
+<p>There is also a library that can be used in Ruby scripts. The <code>ghost</code>
+command is a wrapper for the library. View the source of <code>bin/ghost</code>
+to see how to use the library.</p>
 
 <h1>Installation</h1>
 
-<pre><code>sudo gem install bjeanes-ghost --source http://gems.github.com/
+<pre><code>sudo gem install ghost
 </code></pre>
+
+<h1>Contributors</h1>
+
+<ul>
+<li><a href="http://github.com/bjeanes">Bodaniel Jeanes</a></li>
+<li><a href="http://github.com/mitchellvriley">Mitchell V Riley</a></li>
+</ul>
+
 
 <h1>Legal Stuff</h1>
 

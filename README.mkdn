@@ -1,19 +1,22 @@
 Ghost
 =====
 
-A gem that allows you to create, list, and modify local hostnames in 10.5 with ease...
+A gem that allows you to create, list, and modify local hostnames
+with ease in linux and OS (more to come)...
 
 Requirements
 ============
 
-This command is designed for users of Mac OS X Leopard and relies on a tool which I am pretty 
-sure was not in earlier versions of OS X and definitely isn't in other OSes. This uses the `dscl`
-command to intelligently add hostnames to the database. An adapter to use the hosts file in other OSes is definitely a possibility, but not a priority at this time. Feel free to add it yourself and I'll merge it.
+Unix-based OS (for now)
 
 Intended Usage
 ==============
 
-This gem is designed primarily for web developers who need to add and modify hostnames to their system for virtual hosts on their local/remote web server. However, it could be of use to other people who would otherwise modify their `/etc/hosts` file and flush the cache.
+This gem is designed primarily for web developers who need to add
+and modify hostnames to their system for virtual hosts on their
+local/remote web server. However, it could be of use to other people
+who would otherwise modify their `/etc/hosts` file manually and 
+flush the cache.
 
 Command
 -------
@@ -52,18 +55,20 @@ Command
 Library
 -------
 
-There is also a library that can be used in Ruby scripts. The `ghost` command is a wrapper for
-the library. View the source of `bin/ghost` to see how to use the library.
-
-Sake Task
----------
-
-I also want to make this available as a Sake task to cater those who use it. It too will be a wrapper for the library. I just have to figure out how I can provide an easy way to install the sake tasks via the gem
+There is also a library that can be used in Ruby scripts. The `ghost` 
+command is a wrapper for the library. View the source of `bin/ghost` 
+to see how to use the library.
 
 Installation
 ============
 
     sudo gem install ghost
+    
+Contributors
+============
+
+* [Bodaniel Jeanes](http://github.com/bjeanes)
+* [Mitchell V Riley](http://github.com/mitchellvriley)
 
 Legal Stuff
 ===========
