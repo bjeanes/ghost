@@ -1,5 +1,22 @@
 class Host
+  attr_reader :host, :ip
+
+  def initialize(host, ip)
+    @host = host
+    @ip = ip
+  end
+  
+  def ==(other)
+    @host == other.host && @ip = other.ip
+  end
+  
+  alias :to_s :host
+  alias :name :host
+  alias :hostname :host
+  
   @@hosts_file = '/etc/hosts'
+  @@permanent_hosts = [Host.new("localhost",      "127.0.0.1"),
+                       Host.new(`hostname`.chomp, "127.0.0.1")]
   class << self
     protected :new
     
@@ -13,6 +30,7 @@ class Host
           hosts.each {|host| entries << Host.new(host, ip) }
         end
       end
+      entries.delete_if {|host| @@permanent_hosts.include? host }
       entries
     end
 
@@ -40,9 +58,7 @@ class Host
     end
     
     def empty!
-      hosts = [Host.new("localhost", "127.0.0.1"),
-               Host.new(`hostname`, "127.0.0.1")]
-      write_out!(hosts)
+      write_out!([])
     end
     
     def delete(name)
@@ -54,20 +70,10 @@ class Host
     protected
 
     def write_out!(hosts)
+      hosts += @@permanent_hosts
       # Har har! inject!
       output = hosts.inject("") {|s, h| s + "#{h.ip} #{h.hostname}\n" }
       File.open(@@hosts_file, 'w') {|f| f.print output }
     end
   end
-
-  attr_reader :host, :ip
-
-  def initialize(host, ip)
-    @host = host
-    @ip = ip
-  end
-
-  alias :to_s :host
-  alias :name :host
-  alias :hostname :host
 end
