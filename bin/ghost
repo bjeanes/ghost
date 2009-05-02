@@ -51,7 +51,7 @@ else
       $stderr.puts "The modify subcommand requires a hostname and an IP.\n\n"
       help_text 4
     end
-  when 'delete':
+  when 'delete', 'del', 'remove', 'rm':
     if ARGV.size == 2
       Host.delete(ARGV[1])
       puts "  [Deleting] #{ARGV[1]}"
