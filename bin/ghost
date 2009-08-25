@@ -17,6 +17,8 @@ def help_text(exit_code = 0)
        #{script_name} delete <hostname>
        #{script_name} list
        #{script_name} empty
+       #{script_name} export
+       #{script_name} import <file>
 """
   exit(exit_code)
 end
@@ -75,6 +77,29 @@ else
     Host.empty!
     puts "Done."
     exit 0
+  when 'export':
+    hosts = Host.list
+    hosts.each do |host|
+      puts "#{host.name} #{host.ip}"
+    end
+    exit 0
+  when 'import':
+    if ARGV.size == 2
+      begin
+        File.foreach(ARGV[1]) do |line|
+          host_infos = line.strip.split(' ', 2)
+          host = Host.add(*host_infos)
+          puts "  [Adding] #{host.name} -> #{host.ip}"
+        end
+        exit 0
+      rescue
+        $stderr.puts "Cannot import. A problem occured while opening the import file."
+        exit 5
+      end
+    else
+      $stderr.puts "The import command requires an input file.\n\n"
+      help_text 6
+    end
   else
     $stderr.puts "Invalid option: #{ARGV[0]}"
     help_text 1
