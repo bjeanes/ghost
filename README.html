@@ -42,11 +42,20 @@ $ ghost list
 Listing 1 host(s):
   staging-server.local -&gt; 64.233.167.99
 
+$ ghost export &gt; some_file
+
 $ ghost empty
   [Emptying] Done.
 
 $ ghost list
 Listing 0 host(s):
+
+$ ghost import some_file
+  [Adding] staging-server.local -&gt; 64.233.167.99
+
+$ ghost list
+Listing 1 host(s):
+  staging-server.local -&gt; 64.233.167.99
 </code></pre>
 
 <h2>Library</h2>
@@ -65,6 +74,7 @@ to see how to use the library.</p>
 <ul>
 <li><a href="http://github.com/bjeanes">Bodaniel Jeanes</a></li>
 <li><a href="http://github.com/mitchellvriley">Mitchell V Riley</a></li>
+<li><a href="http://github.com/simonc">Courtois Simon</a></li>
 </ul>
 
 

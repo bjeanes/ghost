@@ -46,11 +46,20 @@ Command
     Listing 1 host(s):
       staging-server.local -> 64.233.167.99
 
+    $ ghost export > some_file
+
     $ ghost empty
       [Emptying] Done.
 
     $ ghost list
     Listing 0 host(s):
+
+    $ ghost import some_file
+      [Adding] staging-server.local -> 64.233.167.99
+
+    $ ghost list
+    Listing 1 host(s):
+      staging-server.local -> 64.233.167.99
 
 Library
 -------
@@ -69,6 +78,7 @@ Contributors
 
 * [Bodaniel Jeanes](http://github.com/bjeanes)
 * [Mitchell V Riley](http://github.com/mitchellvriley)
+* [Courtois Simon](http://github.com/simonc)
 
 Legal Stuff
 ===========
