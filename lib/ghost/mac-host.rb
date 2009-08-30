@@ -9,6 +9,7 @@ class Host
     
     def list
       list = `#{ListCmd}`
+      list = list.split("\n")
       list.collect { |host| Host.new(host.chomp) }
     end
 

@@ -25,7 +25,7 @@ if ARGV.size.zero? || ['-h', '--help', 'help'].include?(ARGV.first)
   help_text
 else  
   case ARGV[0]
-  when 'add':
+  when 'add'
     if [2,3].include?(ARGV.size)
       begin
         ARGV.shift
@@ -40,7 +40,7 @@ else
       $stderr.puts "The add subcommand requires at least a hostname.\n\n"
       help_text 2
     end
-  when 'modify':
+  when 'modify'
     if ARGV.size == 3
       ARGV.shift
       ARGV << true
@@ -51,7 +51,7 @@ else
       $stderr.puts "The modify subcommand requires a hostname and an IP.\n\n"
       help_text 4
     end
-  when 'delete', 'del', 'remove', 'rm':
+  when 'delete', 'del', 'remove', 'rm'
     if ARGV.size == 2
       Host.delete(ARGV[1])
       puts "  [Deleting] #{ARGV[1]}"
@@ -60,7 +60,7 @@ else
       $stderr.puts "The delete subcommand requires a hostname.\n\n"
       help_text 2
     end
-  when 'list':
+  when 'list'
     hosts = Host.list
     pad = hosts.max{|a,b| a.to_s.length <=> b.to_s.length }.to_s.length
     
@@ -70,7 +70,7 @@ else
       puts "#{host.name.rjust(pad+2)} -> #{host.ip}"
     end
     exit 0
-  when 'empty':  
+  when 'empty'
     print "  [Emptying] "
     Host.empty!
     puts "Done."
