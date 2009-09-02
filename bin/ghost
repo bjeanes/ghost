@@ -77,13 +77,13 @@ else
     Host.empty!
     puts "Done."
     exit 0
-  when 'export':
+  when 'export'
     hosts = Host.list
     hosts.each do |host|
       puts "#{host.name} #{host.ip}"
     end
     exit 0
-  when 'import':
+  when 'import'
     if ARGV.size == 2
       begin
         File.foreach(ARGV[1]) do |line|
