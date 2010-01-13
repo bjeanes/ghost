@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + '/rake_helper'
 
 GEM = "ghost"
-GEM_VERSION = [0,2,3]
+GEM_VERSION = [0,2,4]
 AUTHOR = "Bodaniel Jeanes"
 EMAIL = "me@bjeanes.com"
 HOMEPAGE = "http://github.com/bjeanes/ghost"
