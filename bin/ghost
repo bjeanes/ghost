@@ -15,6 +15,7 @@ def help_text(exit_code = 0)
   puts """USAGE: #{script_name} add <hostname> [<ip=127.0.1.1>]
        #{script_name} modify <hostname> <ip>
        #{script_name} delete <hostname>
+       #{script_name} delete_matching <pattern>
        #{script_name} list
        #{script_name} empty
        #{script_name} export
@@ -60,6 +61,19 @@ else
       exit 0
     else  
       $stderr.puts "The delete subcommand requires a hostname.\n\n"
+      help_text 2
+    end
+  when 'delete_matching'
+    if ARGV.size == 2
+      matched = Host.delete_matching(ARGV[1])
+      if matched.empty?
+        puts "  No matching entries found"
+      else
+        matched.each { |h| puts "  [Deleting] #{h}" }
+      end
+      exit 0
+    else  
+      $stderr.puts "The delete_matching subcommand requires a hostname pattern.\n\n"
       help_text 2
     end
   when 'list'

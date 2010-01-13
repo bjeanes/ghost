@@ -53,6 +53,16 @@ class Host
       flush!
     end
     
+    def delete_matching(pattern)
+      pattern = Regexp.escape(pattern)
+      hosts = list.select { |h| h.to_s.match(/#{pattern}/) }
+      hosts.each do |h|
+        delete(h)
+      end
+      flush! unless hosts.empty?
+      hosts
+    end
+    
     # Flushes the DNS Cache
     def flush!
       `dscacheutil -flushcache`

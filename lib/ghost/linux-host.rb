@@ -66,6 +66,15 @@ class Host
       hosts = hosts.delete_if {|host| host.name == name }
       write_out!(hosts)
     end
+    
+    def delete_matching(pattern)
+      pattern = Regexp.escape(pattern)
+      hosts = list.select { |h| h.to_s.match(/#{pattern}/) }
+      hosts.each do |h|
+        delete(h)
+      end
+      hosts
+    end
 
     protected
 
