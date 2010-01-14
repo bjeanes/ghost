@@ -69,9 +69,9 @@ class Host
     
     def delete_matching(pattern)
       pattern = Regexp.escape(pattern)
-      hosts = list.select { |h| h.to_s.match(/#{pattern}/) }
-      hosts.each do |h|
-        delete(h)
+      hosts = list.select { |host| host.name.match(/#{pattern}/) }
+      hosts.each do |host|
+        delete(host.name)
       end
       hosts
     end
