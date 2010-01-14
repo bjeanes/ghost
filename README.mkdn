@@ -35,6 +35,10 @@ Command
     $ ghost delete mydevsite.local
       [Deleting] mydevsite.local
 
+    $ ghost delete_matching test
+      [Deleting] test2.local
+      [Deleting] test.local
+
     $ ghost list
     Listing 1 host(s):
       staging-server.local -> 67.207.136.164
