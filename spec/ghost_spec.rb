@@ -114,6 +114,19 @@ describe Host, ".empty!" do
   end
 end
 
+describe Host, ".delete_matching" do
+  it "should delete matching hostnames" do
+    keep = 'ghost-test-hostname-keep.local'
+    Host.add(keep)
+    Host.add('ghost-test-hostname-match1.local')
+    Host.add('ghost-test-hostname-match2.local')
+    Host.delete_matching('match')
+    Host.list.should have(1).thing
+    Host.list.first.hostname.should eql(keep)
+  end
+end
+
+
 describe Host, ".backup and", Host, ".restore" do
   it "should return a yaml file of all hosts and IPs when backing up"
   it "should empty the hosts and restore only the ones in given yaml"
