@@ -7,13 +7,13 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Bodaniel Jeanes"]
   s.autorequire = %q{ghost}
-  s.date = %q{2009-09-02}
+  s.date = %q{2010-03-11}
   s.default_executable = %q{ghost}
   s.description = %q{Allows you to create, list, and modify local hostnames}
   s.email = %q{me@bjeanes.com}
   s.executables = ["ghost"]
   s.extra_rdoc_files = ["README", "LICENSE", "TODO"]
-  s.files = ["LICENSE", "README", "Rakefile", "TODO", "bin/ghost", "lib/ghost", "lib/ghost/linux-host.rb", "lib/ghost/mac-host.rb", "lib/ghost.rb", "spec/ghost_spec.rb", "spec/spec.opts", "spec/spec_helper.rb"]
+  s.files = ["LICENSE", "README", "Rakefile", "TODO", "bin/ghost", "lib/ghost", "lib/ghost/linux-host.rb", "lib/ghost/mac-host.rb", "lib/ghost.rb", "spec/etc_hosts_spec.rb", "spec/ghost_spec.rb", "spec/spec.opts", "spec/spec_helper.rb"]
   s.homepage = %q{http://github.com/bjeanes/ghost}
   s.rdoc_options = ["--line-numbers"]
   s.require_paths = ["lib"]
