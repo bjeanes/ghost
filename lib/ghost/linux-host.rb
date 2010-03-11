@@ -24,13 +24,13 @@ class Host
       entries = []
       File.open(@@hosts_file).each do |line|
         next if line =~ /^#/
-        if line =~ /^(\d+\.\d+\.\d+\.\d+) (.*)/
+        if line =~ /^(\d+\.\d+\.\d+\.\d+)\s+(.*)$/
           ip = $1
-          hosts = $2.split(' ')
-          hosts.each {|host| entries << Host.new(host, ip) }
+          hosts = $2.split(/\s+/)
+          hosts.each { |host| entries << Host.new(host, ip) }
         end
       end
-      entries.delete_if {|host| @@permanent_hosts.include? host }
+      entries.delete_if { |host| @@permanent_hosts.include? host }
       entries
     end
 
@@ -50,11 +50,11 @@ class Host
     end
     
     def find_by_host(hostname)
-      list.find{|host| host.hostname == hostname }
+      list.find{ |host| host.hostname == hostname }
     end
     
     def find_by_ip(ip)
-      list.find_all{|host| host.ip == ip }
+      list.find_all{ |host| host.ip == ip }
     end
     
     def empty!
@@ -63,16 +63,14 @@ class Host
     
     def delete(name)
       hosts = list
-      hosts = hosts.delete_if {|host| host.name == name }
+      hosts = hosts.delete_if { |host| host.name == name }
       write_out!(hosts)
     end
     
     def delete_matching(pattern)
       pattern = Regexp.escape(pattern)
       hosts = list.select { |host| host.name.match(/#{pattern}/) }
-      hosts.each do |host|
-        delete(host.name)
-      end
+      hosts.each { |host| delete(host.name) }
       hosts
     end
 
@@ -80,7 +78,6 @@ class Host
 
     def write_out!(hosts)
       hosts += @@permanent_hosts
-      # Har har! inject!
       output = hosts.inject("") {|s, h| s + "#{h.ip} #{h.hostname}\n" }
       File.open(@@hosts_file, 'w') {|f| f.print output }
     end

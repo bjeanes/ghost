@@ -1,4 +1,5 @@
 require File.dirname(__FILE__) + '/spec_helper'
+require 'ghost'
 
 # Warning: these tests will delete all hostnames in the system. Please back them up first
 
