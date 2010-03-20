@@ -39,13 +39,8 @@ class Host
         delete(host)
         
         if ! /^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})?$/.match(ip)
-          begin
-            ip_addr = Socket.getaddrinfo(ip, 'http')[0][3]
-            ip = ip_addr
-          rescue SocketError
-            $stderr.puts "Can not find ip for: " + ip
-            exit 3
-          end
+          ip_addr = Socket.getaddrinfo(ip, 'http')[0][3]
+          ip = ip_addr
         end
         
         new_host = Host.new(host, ip)

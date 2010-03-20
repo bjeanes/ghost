@@ -13,7 +13,7 @@ require 'ghost'
 def help_text(exit_code = 0)
   script_name = File.basename $0
   puts """USAGE: #{script_name} add <hostname> [<ip=127.0.1.1>]
-       #{script_name} modify <hostname> <ip>
+       #{script_name} modify <hostname> <ip> OR <hostname> (will lookup ip)
        #{script_name} delete <hostname>
        #{script_name} delete_matching <pattern>
        #{script_name} list
@@ -35,7 +35,10 @@ else
         host = Host.add(*ARGV)
         puts "  [Adding] #{host.name} -> #{host.ip}"
         exit 0
-      rescue
+      rescue SocketError
+        $stderr.puts "Cannot find ip for host"
+        exit 3
+      rescue StandardError
         $stderr.puts "Cannot overwrite an existing entry. Use the modify subcommand"
         exit 3
       end

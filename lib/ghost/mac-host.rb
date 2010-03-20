@@ -18,13 +18,8 @@ class Host
     def add(host, ip = "127.0.0.1", force = false)
       if find_by_host(host).nil? || force
         if ! /^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})?$/.match(ip)
-          begin
-            ip_addr = Socket.getaddrinfo(ip, 'http')[0][3]
-            ip = ip_addr
-          rescue SocketError
-            $stderr.puts "Can not find ip for: " + ip
-            exit 3
-          end
+          ip_addr = Socket.getaddrinfo(ip, 'http')[0][3]
+          ip = ip_addr
         end
         
         `#{CreateCmd % [host, ip]}`
