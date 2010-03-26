@@ -38,7 +38,7 @@ class Host
       if find_by_host(host).nil? || force
         delete(host)
         
-        unless /^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})?$/.match(ip)
+        unless ip[/^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})?$/]
           ip = Socket.getaddrinfo(ip, 'http')[0][3]
         end
         
