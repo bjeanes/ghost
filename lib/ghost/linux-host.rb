@@ -38,9 +38,8 @@ class Host
       if find_by_host(host).nil? || force
         delete(host)
         
-        if ! /^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})?$/.match(ip)
-          ip_addr = Socket.getaddrinfo(ip, 'http')[0][3]
-          ip = ip_addr
+        unless /^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})?$/.match(ip)
+          ip = Socket.getaddrinfo(ip, 'http')[0][3]
         end
         
         new_host = Host.new(host, ip)
