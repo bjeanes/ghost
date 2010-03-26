@@ -1,3 +1,5 @@
+require 'socket'
+
 class Host
   ListCmd = "dscl localhost -list /Local/Default/Hosts 2>&1"
   ReadCmd = "dscl localhost -read /Local/Default/Hosts/%s 2>&1"
@@ -15,6 +17,11 @@ class Host
 
     def add(host, ip = "127.0.0.1", force = false)
       if find_by_host(host).nil? || force
+        if ! /^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})?$/.match(ip)
+          ip_addr = Socket.getaddrinfo(ip, 'http')[0][3]
+          ip = ip_addr
+        end
+        
         `#{CreateCmd % [host, ip]}`
         flush!
         find_by_host(host)

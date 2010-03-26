@@ -105,6 +105,23 @@ describe Host, ".add" do
     
     Host.list.should have(1).thing
   end
+  
+  it "should add a hostname using second hostname's ip" do
+    hostname = 'ghost-test-hostname.local'
+    alias_hostname = 'ghost-test-alias-hostname.local'
+    
+    Host.empty!
+    
+    Host.add(hostname)
+    Host.add(alias_hostname, hostname)
+    
+    Host.list.last.ip.should eql(Host.list.first.ip)
+  end
+  
+  it "should raise SocketError if it can't find hostname's ip" do
+    Host.empty!
+    lambda { Host.add('ghost-test-alias-hostname.google', 'google') }.should raise_error(SocketError)
+  end
 end
 
 describe Host, ".empty!" do
