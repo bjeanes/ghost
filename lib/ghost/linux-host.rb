@@ -39,7 +39,7 @@ class Host
         delete(host)
         
         unless ip[/^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})?$/]
-          ip = Socket.getaddrinfo(ip, 'http')[0][3]
+          ip = Socket.gethostbyname(ip)[3].bytes.to_a.join('.')
         end
         
         new_host = Host.new(host, ip)
