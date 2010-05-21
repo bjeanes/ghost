@@ -1,3 +1,5 @@
+require 'socket'
+
 class Host
   attr_reader :host, :ip
 
