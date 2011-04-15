@@ -107,8 +107,8 @@ describe Host, ".add" do
   end
   
   it "should add a hostname using second hostname's ip" do
-    hostname = 'ghost-test-hostname.local'
-    alias_hostname = 'ghost-test-alias-hostname.local'
+    hostname = 'localhost.localdomain'
+    alias_hostname = 'yahoo.com'
     
     Host.empty!
     
