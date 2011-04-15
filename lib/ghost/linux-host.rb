@@ -123,8 +123,6 @@ class Host
     def write_out!(hosts)
       hosts += @@permanent_hosts
       new_ghosts = hosts.inject("") {|s, h| s + "#{h.ip} #{h.hostname}\n" }
-      puts new_ghosts
-
       with_exclusive_file_access do |f|
 
         out = ""
