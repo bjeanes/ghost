@@ -16,27 +16,31 @@ class Host
   alias :name :host
   alias :hostname :host
   
-  @@hosts_file = '/etc/hosts'
+  @@hosts_file = '/tmp/hosts'
   @@permanent_hosts = [Host.new("localhost",      "127.0.0.1"),
                        Host.new(`hostname`.chomp, "127.0.0.1")]
   class << self
     protected :new
     
     def list
+      entries = []
       with_exclusive_file_access do |file|
-        entries = []
-        file.pos = 0
+        in_ghost_area = false
         file.each do |line|
-          next if line =~ /^#/
-          if line =~ /^(\d+\.\d+\.\d+\.\d+)\s+(.*)$/
-            ip = $1
-            hosts = $2.split(/\s+/)
-            hosts.each { |host| entries << Host.new(host, ip) }
+          if !in_ghost_area and line =~ /^# ghost start/
+            in_ghost_area = true
+          elsif in_ghost_area
+            if line =~ /^# ghost end/
+              in_ghost_area = false 
+            elsif line =~ /^(\d+\.\d+\.\d+\.\d+)\s+(.*)$/
+              ip = $1
+              hosts = $2.split(/\s+/)
+              hosts.each { |host| entries << Host.new(host, ip) }
+            end
           end
         end
-        entries.delete_if { |host| @@permanent_hosts.include? host }
-        entries
       end
+      entries
     end
 
     def add(host, ip = "127.0.0.1", force = false)
@@ -90,6 +94,10 @@ class Host
       end
     end
 
+    def sayho
+        puts "ho"
+    end
+
     protected
 
     def with_exclusive_file_access
@@ -113,13 +121,28 @@ class Host
     end
 
     def write_out!(hosts)
+      hosts += @@permanent_hosts
+      new_ghosts = hosts.inject("") {|s, h| s + "#{h.ip} #{h.hostname}\n" }
+      puts new_ghosts
+
       with_exclusive_file_access do |f|
-        hosts += @@permanent_hosts
-        output = hosts.inject("") {|s, h| s + "#{h.ip} #{h.hostname}\n" }
+
+        out = ""
+        over = false
+        f.each do |line|
+          if line =~ /^# ghost start/
+            over = true
+            out << line << new_ghosts
+          elsif line =~ /^# ghost end/
+            over = false
+          end
+          out << line unless over
+        end
         f.pos = 0
-        f.print output
+        f.print out
         f.truncate(f.pos)
       end
-    end
+   end
+
   end
 end
