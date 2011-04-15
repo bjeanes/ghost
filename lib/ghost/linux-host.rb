@@ -24,13 +24,19 @@ class Host
     
     def list
       entries = []
+      in_ghost_area = false
       File.open(@@hosts_file).each do |line|
-        next if line =~ /^#/
-        if line =~ /^(\d+\.\d+\.\d+\.\d+)\s+(.*)$/
-          ip = $1
-          hosts = $2.split(/\s+/)
-          hosts.each { |host| entries << Host.new(host, ip) }
-        end
+          if !in_ghost_area and line =~ /^# ghost start/
+              in_ghost_area = true
+          elsif in_ghost_area
+              if line =~ /^# ghost end/
+                in_ghost_area = false 
+              elsif line =~ /^(\d+\.\d+\.\d+\.\d+)\s+(.*)$/
+                  ip = $1
+                  hosts = $2.split(/\s+/)
+                  hosts.each { |host| entries << Host.new(host, ip) }
+              end
+          end
       end
       entries.delete_if { |host| @@permanent_hosts.include? host }
       entries
@@ -81,12 +87,35 @@ class Host
       hosts
     end
 
+    def sayho
+        puts "ho"
+    end
+
     protected
 
     def write_out!(hosts)
       hosts += @@permanent_hosts
-      output = hosts.inject("") {|s, h| s + "#{h.ip} #{h.hostname}\n" }
-      File.open(@@hosts_file, 'w') {|f| f.print output }
+      new_ghosts = hosts.inject("") {|s, h| s + "#{h.ip} #{h.hostname}\n" }
+      puts new_ghosts
+
+
+      File.open(@@hosts_file, 'r+') do |f|
+          out = ""
+          over = false
+          f.each do |line|
+             if line =~ /^# ghost start/
+                 over = true
+                 out << line << new_ghosts
+             elsif line =~ /^# ghost end/
+                 over = false
+             end
+
+             out << line unless over
+          end
+          f.pos = 0
+          f.print out
+          f.truncate(f.pos)
+      end
     end
   end
 end
