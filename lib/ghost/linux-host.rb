@@ -96,8 +96,6 @@ class Host
     def write_out!(hosts)
       hosts += @@permanent_hosts
       new_ghosts = hosts.inject("") {|s, h| s + "#{h.ip} #{h.hostname}\n" }
-      puts new_ghosts
-
 
       File.open(@@hosts_file, 'r+') do |f|
           out = ""
