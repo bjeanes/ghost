@@ -17,8 +17,7 @@ class Host
   alias :hostname :host
   
   @@hosts_file = '/etc/hosts'
-  @@permanent_hosts = [Host.new("localhost",      "127.0.0.1"),
-                       Host.new(`hostname`.chomp, "127.0.0.1")]
+
   class << self
     protected :new
     
@@ -38,7 +37,6 @@ class Host
               end
           end
       end
-      entries.delete_if { |host| @@permanent_hosts.include? host }
       entries
     end
 
@@ -94,7 +92,6 @@ class Host
     protected
 
     def write_out!(hosts)
-      hosts += @@permanent_hosts
       new_ghosts = hosts.inject("") {|s, h| s + "#{h.ip} #{h.hostname}\n" }
 
       File.open(@@hosts_file, 'r+') do |f|
