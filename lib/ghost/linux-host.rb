@@ -16,9 +16,8 @@ class Host
   alias :name :host
   alias :hostname :host
   
-  @@hosts_file = '/tmp/hosts'
-  @@permanent_hosts = [Host.new("localhost",      "127.0.0.1"),
-                       Host.new(`hostname`.chomp, "127.0.0.1")]
+  @@hosts_file = '/etc/hosts'
+
   class << self
     protected :new
     
@@ -121,7 +120,6 @@ class Host
     end
 
     def write_out!(hosts)
-      hosts += @@permanent_hosts
       new_ghosts = hosts.inject("") {|s, h| s + "#{h.ip} #{h.hostname}\n" }
       with_exclusive_file_access do |f|
 
