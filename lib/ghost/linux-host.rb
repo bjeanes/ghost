@@ -17,18 +17,20 @@ class Host
   alias :hostname :host
   
   @@hosts_file = '/etc/hosts'
+  @@start_token, @@end_token = '# ghost start', '# ghost end'
+    
 
   class << self
     protected :new
-    
+
     def list
       entries = []
       in_ghost_area = false
       File.open(@@hosts_file).each do |line|
-          if !in_ghost_area and line =~ /^# ghost start/
+          if !in_ghost_area and line =~ /^#{@@start_token}/
               in_ghost_area = true
           elsif in_ghost_area
-              if line =~ /^# ghost end/
+              if line =~ /^#{@@end_token}/o
                 in_ghost_area = false 
               elsif line =~ /^(\d+\.\d+\.\d+\.\d+)\s+(.*)$/
                   ip = $1
@@ -94,10 +96,10 @@ class Host
           out,over,seen_tokens = "",false,false
 
           f.each do |line|
-             if line =~ /^# ghost start/
+             if line =~ /^#{@@start_token}/o
                  over,seen_tokens = true,true
                  out << line << new_ghosts
-             elsif line =~ /^# ghost end/
+             elsif line =~ /^#{@@end_token}/o
                  over = false
              end
 
@@ -114,7 +116,7 @@ class Host
     end
 
     def surround_with_tokens(str)
-        "\n# ghost start\n" + str + "\n# ghost end\n"
+        "\n#{@@start_token}\n" + str + "\n#{@@end_token}\n"
     end
   end
 end
