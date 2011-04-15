@@ -59,7 +59,7 @@ class Host
           
           new_host
         else
-          raise "Can not overwrite existing record"
+          raise "Can not overwrite existing record. Use the modify subcommand"
         end      
       end
     end
@@ -93,10 +93,6 @@ class Host
       end
     end
 
-    def sayho
-        puts "ho"
-    end
-
     protected
 
     def with_exclusive_file_access
@@ -123,6 +119,7 @@ class Host
       new_ghosts = hosts.inject("") {|s, h| s + "#{h.ip} #{h.hostname}\n" }
       with_exclusive_file_access do |f|
 
+<<<<<<< HEAD
         out = ""
         over = false
         f.each do |line|
@@ -140,5 +137,33 @@ class Host
       end
    end
 
+=======
+      File.open(@@hosts_file, 'r+') do |f|
+          out,over,seen_tokens = "",false,false
+
+          f.each do |line|
+             if line =~ /^# ghost start/
+                 over,seen_tokens = true,true
+                 out << line << new_ghosts
+             elsif line =~ /^# ghost end/
+                 over = false
+             end
+
+             out << line unless over
+          end
+          if !seen_tokens 
+              out << surround_with_tokens( new_ghosts )
+          end
+
+          f.pos = 0
+          f.print out
+          f.truncate(f.pos)
+      end
+    end
+
+    def surround_with_tokens(str)
+        "\n# ghost start\n" + str + "\n# ghost end\n"
+    end
+>>>>>>> add the start/end tokens if they were not found during write_out
   end
 end
