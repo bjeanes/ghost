@@ -17,29 +17,32 @@ class Host
   alias :hostname :host
   
   @@hosts_file = '/etc/hosts'
+  @@start_token, @@end_token = '# ghost start', '# ghost end'
+    
 
   class << self
     protected :new
-    
+
     def list
       entries = []
       with_exclusive_file_access do |file|
         in_ghost_area = false
         file.each do |line|
-          if !in_ghost_area and line =~ /^# ghost start/
-            in_ghost_area = true
+          if !in_ghost_area and line =~ /^#{@@start_token}/
+              in_ghost_area = true
           elsif in_ghost_area
-            if line =~ /^# ghost end/
-              in_ghost_area = false 
-            elsif line =~ /^(\d+\.\d+\.\d+\.\d+)\s+(.*)$/
-              ip = $1
-              hosts = $2.split(/\s+/)
-              hosts.each { |host| entries << Host.new(host, ip) }
-            end
+              if line =~ /^#{@@end_token}/o
+                in_ghost_area = false 
+              elsif line =~ /^(\d+\.\d+\.\d+\.\d+)\s+(.*)$/
+                  ip = $1
+                  hosts = $2.split(/\s+/)
+                  hosts.each { |host| entries << Host.new(host, ip) }
+              end
           end
         end
       end
       entries
+      end
     end
 
     def add(host, ip = "127.0.0.1", force = false)
@@ -142,10 +145,10 @@ class Host
           out,over,seen_tokens = "",false,false
 
           f.each do |line|
-             if line =~ /^# ghost start/
+             if line =~ /^#{@@start_token}/o
                  over,seen_tokens = true,true
                  out << line << new_ghosts
-             elsif line =~ /^# ghost end/
+             elsif line =~ /^#{@@end_token}/o
                  over = false
              end
 
@@ -162,7 +165,7 @@ class Host
     end
 
     def surround_with_tokens(str)
-        "\n# ghost start\n" + str + "\n# ghost end\n"
+        "\n#{@@start_token}\n" + str + "\n#{@@end_token}\n"
     end
 >>>>>>> add the start/end tokens if they were not found during write_out
   end
