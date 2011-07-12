@@ -1,0 +1,140 @@
+#!/usr/bin/env ruby
+#
+#  Created by Bodaniel Jeanes on 2008-8-19.
+#  Copyright (c) 2008. All rights reserved.
+
+begin
+  require 'rubygems'
+rescue LoadError
+  # no rubygems to load, so we fail silently
+end
+require File.join(File.dirname(__FILE__), "..", "lib", "ghost")
+
+def help_text(exit_code = 0)
+  script_name = File.basename $0
+  puts """USAGE: #{script_name} add <host> <hostname> [--user=<user>] [--port=<port>]
+       #{script_name} modify <host> <hostname> [--user=<user>] [--port=<port>]
+       #{script_name} delete <host>
+       #{script_name} list
+       #{script_name} empty
+       #{script_name} export
+       #{script_name} import <file>
+"""
+  exit(exit_code)
+end
+
+def parse(argv)
+  argv.shift
+  
+  new_config = {
+    :host => argv.shift,
+    :hostname => argv.shift
+  }
+
+  if argv.size > 0
+    argv.each do |arg|
+      if arg =~ /--([a-z]+)=(.*)/
+        new_config[$1.to_sym] = $2
+      end
+    end
+  end
+  
+  new_config
+end
+
+if ARGV.size.zero? || ['-h', '--help', 'help'].include?(ARGV.first)
+  help_text
+else  
+  case ARGV[0]
+  when 'add'
+    if [3,4,5].include?(ARGV.size)
+      begin
+        new_config = parse(ARGV)
+        
+        config = SshConfig.add(new_config)
+        puts "  [Adding] #{config.host} -> #{config.hostname}"
+        exit 0
+      rescue SshConfigDuplicateError
+        $stderr.puts $!
+        exit 3
+      end
+    else
+      $stderr.puts "The add subcommand requires at least a host and a hostname.\n\n"
+      help_text 2
+    end
+  when 'modify'
+    if [3,4,5].include?(ARGV.size)
+      new_config = parse(ARGV)
+      new_config[:force] = true
+      config = SshConfig.add(new_config)
+      puts "  [Modifying] #{config.host} -> #{config.hostname}"
+      exit 0
+    else
+      $stderr.puts "The modify subcommand requires at least a host and a hostname.\n\n"
+      help_text 4
+    end
+  when 'delete', 'del', 'remove', 'rm'
+    if ARGV.size == 2
+      SshConfig.delete(ARGV[1])
+      puts "  [Deleting] #{ARGV[1]}"
+      exit 0
+    else  
+      $stderr.puts "The delete subcommand requires a hostname.\n\n"
+      help_text 2
+    end
+
+  when 'list'
+    configs = SshConfig.list
+    pad = configs.max{|a,b| a.to_s.length <=> b.to_s.length }.to_s.length
+    
+    puts "Listing #{configs.size} configs(s):"
+    
+    configs.each do |c|
+      user = c.user ? "#{c.user}@" : ""
+      puts "#{c.host.rjust(pad+2)} -> #{user}#{c.hostname}:#{c.port||22}"
+    end
+    exit 0
+  when 'empty'
+    print "  [Emptying] "
+    SshConfig.empty!
+    puts "Done."
+    exit 0
+  when 'export'
+    configs = SshConfig.list
+    configs.each do |c|
+      puts "#{c.host},#{c.hostname},#{c.user},#{c.port}"
+    end
+    exit 0
+  when 'import'
+    if ARGV.size == 2
+      begin
+        File.foreach(ARGV[1]) do |line|
+          cfg_infos = line.strip.split(',')
+          hash = {
+            :host => cfg_infos[0],
+            :hostname => cfg_infos[1]
+          }
+          
+          hash[:user] = cfg_infos[2] if cfg_infos.size > 2
+          hash[:user] = cfg_infos[3] if cfg_infos.size > 3
+          hash[:force] = true
+          
+          config = SshConfig.add(hash)
+
+          puts "  [Adding] #{config.host} -> #{config.hostname}"
+        end
+        exit 0
+      rescue
+        $stderr.puts "Cannot import. A problem occured while opening the import file (#{$!.message})."
+        exit 5
+      end
+    else
+      $stderr.puts "The import command requires an input file.\n\n"
+      help_text 6
+    end
+  else
+    $stderr.puts "Invalid option: #{ARGV[0]}"
+    help_text 1
+  end
+end
+
