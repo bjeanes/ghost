@@ -20,6 +20,7 @@ spec = Gem::Specification.new do |s|
   s.email = EMAIL
   s.homepage = HOMEPAGE
   s.executables << 'ghost'
+  s.executables << 'ghost-ssh'
   s.autorequire = GEM
   s.files = %w(LICENSE README Rakefile TODO) + Dir.glob("{bin,lib,spec}/**/*")
 end
