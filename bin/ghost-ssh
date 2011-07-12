@@ -116,7 +116,7 @@ else
           }
           
           hash[:user] = cfg_infos[2] if cfg_infos.size > 2
-          hash[:user] = cfg_infos[3] if cfg_infos.size > 3
+          hash[:port] = cfg_infos[3] if cfg_infos.size > 3
           hash[:force] = true
           
           config = SshConfig.add(hash)
