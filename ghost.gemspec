@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.default_executable = %q{ghost}
   s.description = %q{Allows you to create, list, and modify local hostnames}
   s.email = %q{me@bjeanes.com}
-  s.executables = ["ghost"]
+  s.executables = ["ghost", "ghost-ssh"]
   s.extra_rdoc_files = ["README", "LICENSE", "TODO"]
   s.files = ["LICENSE", "README", "Rakefile", "TODO", "bin/ghost", "lib/ghost", "lib/ghost/linux-host.rb", "lib/ghost/mac-host.rb", "lib/ghost.rb", "spec/etc_hosts_spec.rb", "spec/ghost_spec.rb", "spec/spec.opts", "spec/spec_helper.rb"]
   s.homepage = %q{http://github.com/bjeanes/ghost}
