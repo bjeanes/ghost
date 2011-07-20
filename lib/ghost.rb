@@ -6,3 +6,5 @@ when /darwin/
 when /linux/
   require 'ghost/linux-host'
 end
+
+require 'ghost/ssh_config'
