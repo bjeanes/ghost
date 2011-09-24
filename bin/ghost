@@ -16,7 +16,7 @@ def help_text(exit_code = 0)
        #{script_name} modify <hostname> <ip> OR <hostname> (will lookup ip)
        #{script_name} delete <hostname>
        #{script_name} delete_matching <pattern>
-       #{script_name} list
+       #{script_name} list [<filter>]
        #{script_name} empty
        #{script_name} export
        #{script_name} import <file>
@@ -80,7 +80,14 @@ else
       help_text 2
     end
   when 'list'
+    filter = %r|#{ARGV[1]}| if ARGV.size == 2
+    
     hosts = Host.list
+    
+    if filter
+      hosts.reject! { |host| host.name !~ filter && host.ip !~ filter }
+    end
+    
     pad = hosts.max{|a,b| a.to_s.length <=> b.to_s.length }.to_s.length
     
     puts "Listing #{hosts.size} host(s):"
