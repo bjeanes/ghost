@@ -24,9 +24,10 @@ class Host
     protected :new
 
     def list
-      entries = []
       with_exclusive_file_access do |file|
+        entries = []
         in_ghost_area = false
+        file.pos = 0
         file.each do |line|
           if !in_ghost_area and line =~ /^#{@@start_token}/
               in_ghost_area = true
@@ -40,8 +41,7 @@ class Host
               end
           end
         end
-      end
-      entries
+        entries
       end
     end
 
@@ -119,54 +119,35 @@ class Host
     end
 
     def write_out!(hosts)
-      new_ghosts = hosts.inject("") {|s, h| s + "#{h.ip} #{h.hostname}\n" }
       with_exclusive_file_access do |f|
+        new_ghosts = hosts.inject("") {|s, h| s + "#{h.ip} #{h.hostname}\n" }
 
-<<<<<<< HEAD
-        out = ""
-        over = false
+        output = ""
+        over,seen_tokens = false,false
+        f.pos = 0
+
         f.each do |line|
-          if line =~ /^# ghost start/
-            over = true
-            out << line << new_ghosts
-          elsif line =~ /^# ghost end/
+          if line =~ /^#{@@start_token}/o
+            over,seen_tokens = true,true
+            output << line << new_ghosts
+          elsif line =~ /^#{@@end_token}/o
             over = false
           end
-          out << line unless over
+
+          output << line unless over
         end
+        if !seen_tokens 
+          output << surround_with_tokens( new_ghosts )
+        end
+
         f.pos = 0
-        f.print out
+        f.print output
         f.truncate(f.pos)
-      end
-   end
-
-=======
-      File.open(@@hosts_file, 'r+') do |f|
-          out,over,seen_tokens = "",false,false
-
-          f.each do |line|
-             if line =~ /^#{@@start_token}/o
-                 over,seen_tokens = true,true
-                 out << line << new_ghosts
-             elsif line =~ /^#{@@end_token}/o
-                 over = false
-             end
-
-             out << line unless over
-          end
-          if !seen_tokens 
-              out << surround_with_tokens( new_ghosts )
-          end
-
-          f.pos = 0
-          f.print out
-          f.truncate(f.pos)
       end
     end
 
     def surround_with_tokens(str)
         "\n#{@@start_token}\n" + str + "\n#{@@end_token}\n"
     end
->>>>>>> add the start/end tokens if they were not found during write_out
   end
 end
