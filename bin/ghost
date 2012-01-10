@@ -9,6 +9,7 @@ rescue LoadError
   # no rubygems to load, so we fail silently
 end
 require 'ghost'
+require 'open-uri'
 
 def help_text(exit_code = 0)
   script_name = File.basename $0
@@ -110,7 +111,8 @@ else
   when 'import'
     if ARGV.size == 2
       begin
-        File.foreach(ARGV[1]) do |line|
+        import_file = open(ARGV[1])
+        import_file.each_line do |line|
           host_infos = line.strip.split(' ', 2)
           host = Host.add(*host_infos)
           puts "  [Adding] #{host.name} -> #{host.ip}"
