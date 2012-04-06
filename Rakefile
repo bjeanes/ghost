@@ -10,7 +10,7 @@ Dir['tasks/**/*.rake'].each { |rake| load rake }
 
 desc "list tasks"
 task :default do
-  puts `rake -T`.grep(/^[^(].*$/)
+  puts `rake -T`
 end
 
 desc "Outstanding TODO's"  
