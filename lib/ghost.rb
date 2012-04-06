@@ -1,6 +1,8 @@
 $: << File.dirname(__FILE__)
 
-case RUBY_PLATFORM
+require 'rbconfig'
+
+case RbConfig::CONFIG['host_os']
 when /darwin/
   productVersion = `/usr/bin/sw_vers -productVersion`.strip
   if productVersion =~ /^10\.7\.[2-9]{1}$/
