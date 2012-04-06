@@ -43,10 +43,10 @@ else
       begin
         new_config = parse(ARGV)
 
-        config = SshConfig.add(new_config)
+        config = Ghost::SshConfig.add(new_config)
         puts "  [Adding] #{config.host} -> #{config.hostname}"
         exit 0
-      rescue SshConfigDuplicateError
+      rescue Ghost::SshConfigDuplicateError
         $stderr.puts $!
         exit 3
       end
@@ -58,7 +58,7 @@ else
     if [3,4,5].include?(ARGV.size)
       new_config = parse(ARGV)
       new_config[:force] = true
-      config = SshConfig.add(new_config)
+      config = Ghost::SshConfig.add(new_config)
       puts "  [Modifying] #{config.host} -> #{config.hostname}"
       exit 0
     else
@@ -67,7 +67,7 @@ else
     end
   when 'delete', 'del', 'remove', 'rm'
     if ARGV.size == 2
-      SshConfig.delete(ARGV[1])
+      Ghost::SshConfig.delete(ARGV[1])
       puts "  [Deleting] #{ARGV[1]}"
       exit 0
     else
@@ -76,7 +76,7 @@ else
     end
 
   when 'list'
-    configs = SshConfig.list
+    configs = Ghost::SshConfig.list
     pad = configs.max{|a,b| a.to_s.length <=> b.to_s.length }.to_s.length
 
     puts "Listing #{configs.size} configs(s):"
@@ -88,11 +88,11 @@ else
     exit 0
   when 'empty'
     print "  [Emptying] "
-    SshConfig.empty!
+    Ghost::SshConfig.empty!
     puts "Done."
     exit 0
   when 'export'
-    configs = SshConfig.list
+    configs = Ghost::SshConfig.list
     configs.each do |c|
       puts "#{c.host},#{c.hostname},#{c.user},#{c.port}"
     end
@@ -111,7 +111,7 @@ else
           hash[:port] = cfg_infos[3] if cfg_infos.size > 3
           hash[:force] = true
 
-          config = SshConfig.add(hash)
+          config = Ghost::SshConfig.add(hash)
 
           puts "  [Adding] #{config.host} -> #{config.hostname}"
         end

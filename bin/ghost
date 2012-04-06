@@ -28,7 +28,7 @@ else
     if [2,3].include?(ARGV.size)
       begin
         ARGV.shift
-        host = Host.add(*ARGV)
+        host = Ghost::Host.add(*ARGV)
         puts "  [Adding] #{host.name} -> #{host.ip}"
         exit 0
       rescue SocketError
@@ -46,7 +46,7 @@ else
     if ARGV.size == 3
       ARGV.shift
       ARGV << true
-      host = Host.add(*ARGV)
+      host = Ghost::Host.add(*ARGV)
       puts "  [Modifying] #{host.name} -> #{host.ip}"
       exit 0
     else
@@ -55,7 +55,7 @@ else
     end
   when 'delete', 'del', 'remove', 'rm'
     if ARGV.size == 2
-      Host.delete(ARGV[1])
+      Ghost::Host.delete(ARGV[1])
       puts "  [Deleting] #{ARGV[1]}"
       exit 0
     else
@@ -64,7 +64,7 @@ else
     end
   when 'delete_matching'
     if ARGV.size == 2
-      matched = Host.delete_matching(ARGV[1])
+      matched = Ghost::Host.delete_matching(ARGV[1])
       if matched.empty?
         puts "  No matching entries found"
       else
@@ -78,7 +78,7 @@ else
   when 'list'
     filter = %r|#{ARGV[1]}| if ARGV.size == 2
 
-    hosts = Host.list
+    hosts = Ghost::Host.list
 
     if filter
       hosts.reject! { |host| host.name !~ filter && host.ip !~ filter }
@@ -94,11 +94,11 @@ else
     exit 0
   when 'empty'
     print "  [Emptying] "
-    Host.empty!
+    Ghost::Host.empty!
     puts "Done."
     exit 0
   when 'export'
-    hosts = Host.list
+    hosts = Ghost::Host.list
     hosts.each do |host|
       puts "#{host.name} #{host.ip}"
     end
@@ -109,7 +109,7 @@ else
         import_file = open(ARGV[1])
         import_file.each_line do |line|
           host_infos = line.strip.split(' ', 2)
-          host = Host.add(*host_infos)
+          host = Ghost::Host.add(*host_infos)
           puts "  [Adding] #{host.name} -> #{host.ip}"
         end
         exit 0
