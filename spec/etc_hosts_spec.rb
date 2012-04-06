@@ -50,11 +50,16 @@ describe Host do
     end
     
     it "gets all hosts on a single /etc/hosts line" do
-      example = "127.0.0.1\tproject_a.local\t\t\tproject_b.local   project_c.local"
-      File.open($hosts_file, 'w') {|f| f << example}
+      example = <<-EoEx
+      127.0.0.1      localhost.localdomain
+      # ghost start
+      123.123.123.1     project_a.local\t\tproject_b.local   project_c.local
+      # ghost end
+      EoEx
+      File.open($hosts_file, 'w') {|f| f << example.gsub!(/^\s*/, '')}
       hosts = Host.list
       hosts.should have(3).items
-      hosts.map{|h|h.ip}.uniq.should == ['127.0.0.1']
+      hosts.map{|h|h.ip}.uniq.should == ['123.123.123.1']
       hosts.map{|h|h.host}.sort.should == %w[project_a.local project_b.local project_c.local]
       Host.add("project_d.local")
       Host.list.should have(4).items
@@ -116,8 +121,8 @@ describe Host do
     end
     
     it "should add a hostname using second hostname's ip" do
-      hostname = 'ghost-test-hostname.local'
-      alias_hostname = 'ghost-test-alias-hostname.local'
+      hostname = 'localhost.localdomain'
+      alias_hostname = 'yahoo.com'
 
       Host.empty!
 

@@ -17,24 +17,30 @@ class Host
   alias :hostname :host
   
   @@hosts_file = '/etc/hosts'
-  @@permanent_hosts = [Host.new("localhost",      "127.0.0.1"),
-                       Host.new(`hostname`.chomp, "127.0.0.1")]
+  @@start_token, @@end_token = '# ghost start', '# ghost end'
+    
+
   class << self
     protected :new
-    
+
     def list
       with_exclusive_file_access do |file|
         entries = []
+        in_ghost_area = false
         file.pos = 0
         file.each do |line|
-          next if line =~ /^#/
-          if line =~ /^(\d+\.\d+\.\d+\.\d+)\s+(.*)$/
-            ip = $1
-            hosts = $2.split(/\s+/)
-            hosts.each { |host| entries << Host.new(host, ip) }
+          if !in_ghost_area and line =~ /^#{@@start_token}/
+              in_ghost_area = true
+          elsif in_ghost_area
+              if line =~ /^#{@@end_token}/o
+                in_ghost_area = false 
+              elsif line =~ /^(\d+\.\d+\.\d+\.\d+)\s+(.*)$/
+                  ip = $1
+                  hosts = $2.split(/\s+/)
+                  hosts.each { |host| entries << Host.new(host, ip) }
+              end
           end
         end
-        entries.delete_if { |host| @@permanent_hosts.include? host }
         entries
       end
     end
@@ -56,7 +62,7 @@ class Host
           
           new_host
         else
-          raise "Can not overwrite existing record"
+          raise "Can not overwrite existing record. Use the modify subcommand"
         end      
       end
     end
@@ -114,12 +120,34 @@ class Host
 
     def write_out!(hosts)
       with_exclusive_file_access do |f|
-        hosts += @@permanent_hosts
-        output = hosts.inject("") {|s, h| s + "#{h.ip} #{h.hostname}\n" }
+        new_ghosts = hosts.inject("") {|s, h| s + "#{h.ip} #{h.hostname}\n" }
+
+        output = ""
+        over,seen_tokens = false,false
+        f.pos = 0
+
+        f.each do |line|
+          if line =~ /^#{@@start_token}/o
+            over,seen_tokens = true,true
+            output << line << new_ghosts
+          elsif line =~ /^#{@@end_token}/o
+            over = false
+          end
+
+          output << line unless over
+        end
+        if !seen_tokens 
+          output << surround_with_tokens( new_ghosts )
+        end
+
         f.pos = 0
         f.print output
         f.truncate(f.pos)
       end
+    end
+
+    def surround_with_tokens(str)
+        "\n#{@@start_token}\n" + str + "\n#{@@end_token}\n"
     end
   end
 end

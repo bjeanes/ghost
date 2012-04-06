@@ -39,7 +39,7 @@ else
         $stderr.puts "Cannot find ip for host"
         exit 3
       rescue StandardError
-        $stderr.puts "Cannot overwrite an existing entry. Use the modify subcommand"
+        $stderr.puts "Error:",$!
         exit 3
       end
     else

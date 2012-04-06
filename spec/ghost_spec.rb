@@ -109,7 +109,7 @@ describe Host, ".add" do
   it "should add a hostname using second hostname's ip" do
     hostname = 'ghost-test-hostname.local'
     alias_hostname = 'ghost-test-alias-hostname.local'
-    
+
     Host.empty!
     
     Host.add(hostname)
