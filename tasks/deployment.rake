@@ -1,5 +1,3 @@
-require File.dirname(__FILE__) + '/rake_helper'
-
 GEM = "ghost"
 GEM_VERSION = [0,2,8]
 AUTHOR = "Bodaniel Jeanes"
