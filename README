@@ -80,11 +80,19 @@ Installation
 Contributors
 ============
 
-* [Bodaniel Jeanes](http://github.com/bjeanes)
+If this list is ever out of date, you can get full contributor list with `git log --format='%aN (%ae)' | sort -u`
+
+* [Alkesh Vaghmaria](http://github.com/alkesh)
+* [Andrei Serdeliuc](http://github.com/extraordinaire)
 * [Ben Hoskings](http://github.com/benhoskings)
-* [Mitchell V Riley](http://github.com/mitchellvriley)
+* [Bodaniel Jeanes](http://github.com/bjeanes)
 * [Courtois Simon](http://github.com/simonc)
+* [Felipe Coury](http://github.com/fcoury)
 * [Justin Mazzi](http://github.com/jmazzi)
+* [Lars Fronius](http://github.com/LarsFronius)
+* [Lee Jensen](http://github.com/outerim)
+* [Mitchell Riley](http://github.com/mitchellvriley)
+* [Ryan Bigg](http://github.com/radar)
 
 Legal Stuff
 ===========
