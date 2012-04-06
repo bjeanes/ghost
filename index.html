@@ -1,0 +1,149 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Ghost by bjeanes</title>
+    
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Ghost</h1>
+        <p>A gem that allows you to create, list, and modify hostnames with ease...</p>
+        <p class="view"><a href="https://github.com/bjeanes/ghost">View the Project on GitHub <small>bjeanes/ghost</small></a></p>
+        <ul>
+          <li><a href="https://github.com/bjeanes/ghost/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/bjeanes/ghost/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/bjeanes/ghost">Fork On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>Ghost</h1>
+
+<p>A gem that allows you to create, list, and modify local hostnames
+with ease in linux and OS (more to come)...</p>
+
+<h1>Requirements</h1>
+
+<p>Unix-based OS (for now)</p>
+
+<h1>Intended Usage</h1>
+
+<p>This gem is designed primarily for web developers who need to add
+and modify hostnames to their system for virtual hosts on their
+local/remote web server. However, it could be of use to other people
+who would otherwise modify their <code>/etc/hosts</code> file manually and
+flush the cache.</p>
+
+<h2>Command</h2>
+
+<pre><code>$ ghost add mydevsite.local
+  [Adding] mydevsite.local -&gt; 127.0.0.1
+
+$ ghost add staging-server.local 67.207.136.164
+  [Adding] staging-server.local -&gt; 67.207.136.164
+
+$ ghost list
+Listing 2 host(s):
+  mydevsite.local      -&gt; 127.0.0.1
+  staging-server.local -&gt; 67.207.136.164
+
+$ ghost delete mydevsite.local
+  [Deleting] mydevsite.local
+
+$ ghost delete_matching test
+  [Deleting] test2.local
+  [Deleting] test.local
+
+$ ghost list
+Listing 1 host(s):
+  staging-server.local -&gt; 67.207.136.164
+
+$ ghost modify staging-server.local 64.233.167.99
+  [Modifying] staging-server.local -&gt; 64.233.167.99
+
+$ ghost list
+Listing 1 host(s):
+  staging-server.local -&gt; 64.233.167.99
+
+$ ghost export &gt; some_file
+
+$ ghost empty
+  [Emptying] Done.
+
+$ ghost list
+Listing 0 host(s):
+
+$ ghost import some_file
+  [Adding] staging-server.local -&gt; 64.233.167.99
+
+$ ghost list
+Listing 1 host(s):
+  staging-server.local -&gt; 64.233.167.99
+</code></pre>
+
+<h2>Library</h2>
+
+<p>There is also a library that can be used in Ruby scripts. The <code>ghost</code>
+command is a wrapper for the library. View the source of <code>bin/ghost</code>
+to see how to use the library.</p>
+
+<h1>Installation</h1>
+
+<pre><code>sudo gem install ghost
+</code></pre>
+
+<h1>Contributors</h1>
+
+<p>If this list is ever out of date, you can get full contributor list with <code>git log --format='%aN (%ae)' | sort -u</code></p>
+
+<ul>
+<li><a href="http://github.com/alkesh">Alkesh Vaghmaria</a></li>
+<li><a href="http://github.com/extraordinaire">Andrei Serdeliuc</a></li>
+<li><a href="http://github.com/benhoskings">Ben Hoskings</a></li>
+<li><a href="http://github.com/bjeanes">Bodaniel Jeanes</a></li>
+<li><a href="http://github.com/simonc">Courtois Simon</a></li>
+<li><a href="http://github.com/fcoury">Felipe Coury</a></li>
+<li><a href="http://github.com/jmazzi">Justin Mazzi</a></li>
+<li><a href="http://github.com/LarsFronius">Lars Fronius</a></li>
+<li><a href="http://github.com/outerim">Lee Jensen</a></li>
+<li><a href="http://github.com/mitchellvriley">Mitchell Riley</a></li>
+<li><a href="http://github.com/radar">Ryan Bigg</a></li>
+</ul><h1>Legal Stuff</h1>
+
+<p>Copyright (c) 2008-2010 Bodaniel Jeanes</p>
+
+<p>Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:</p>
+
+<p>The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.</p>
+
+<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/bjeanes">bjeanes</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+  </body>
+</html>
