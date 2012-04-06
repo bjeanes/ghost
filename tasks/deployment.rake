@@ -47,8 +47,8 @@ task :readme do
   File.open('README.html', 'w') do |f|
     puts "Writing out HTML file"
     f.write readme_html
-  end  
-  
+  end
+
   File.open('README', 'w') do |f|
     puts "Writing out text file"
     f.write readme

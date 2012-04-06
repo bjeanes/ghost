@@ -1,7 +1,7 @@
 Host example1
   HostName 192.168.227.128
   User root
-  
+
 Host example2
   HostName example2.webbynode.com
   User root

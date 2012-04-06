@@ -26,7 +26,7 @@ end
 
 if ARGV.size.zero? || ['-h', '--help', 'help'].include?(ARGV.first)
   help_text
-else  
+else
   case ARGV[0]
   when 'add'
     if [2,3].include?(ARGV.size)
@@ -62,7 +62,7 @@ else
       Host.delete(ARGV[1])
       puts "  [Deleting] #{ARGV[1]}"
       exit 0
-    else  
+    else
       $stderr.puts "The delete subcommand requires a hostname.\n\n"
       help_text 2
     end
@@ -75,23 +75,23 @@ else
         matched.each { |h| puts "  [Deleting] #{h}" }
       end
       exit 0
-    else  
+    else
       $stderr.puts "The delete_matching subcommand requires a hostname pattern.\n\n"
       help_text 2
     end
   when 'list'
     filter = %r|#{ARGV[1]}| if ARGV.size == 2
-    
+
     hosts = Host.list
-    
+
     if filter
       hosts.reject! { |host| host.name !~ filter && host.ip !~ filter }
     end
-    
+
     pad = hosts.max{|a,b| a.to_s.length <=> b.to_s.length }.to_s.length
-    
+
     puts "Listing #{hosts.size} host(s):"
-    
+
     hosts.each do |host|
       puts "#{host.name.rjust(pad+2)} -> #{host.ip}"
     end

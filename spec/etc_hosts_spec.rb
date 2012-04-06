@@ -10,7 +10,7 @@ describe Host do
   end
   before { `touch #{$hosts_file.inspect}` }
   after  { `rm -f #{$hosts_file.inspect}` }
-  
+
   it "has an IP" do
     hostname = 'ghost-test-hostname.local'
 
@@ -38,7 +38,7 @@ describe Host do
     Host.add(hostname, ip)
     host.hostname.should eql(hostname)
   end
-  
+
   describe ".list" do
     it "returns an array" do
       Host.list.should be_instance_of(Array)
@@ -48,7 +48,7 @@ describe Host do
       Host.add('ghost-test-hostname.local')
       Host.list.first.should be_instance_of(Host)
     end
-    
+
     it "gets all hosts on a single /etc/hosts line" do
       example = "127.0.0.1\tproject_a.local\t\t\tproject_b.local   project_c.local"
       File.open($hosts_file, 'w') {|f| f << example}
@@ -60,7 +60,7 @@ describe Host do
       Host.list.should have(4).items
     end
   end
-  
+
   describe "#to_s" do
     it "returns hostname" do
       hostname = 'ghost-test-hostname.local'
@@ -114,7 +114,7 @@ describe Host do
 
       Host.list.should have(1).thing
     end
-    
+
     it "should add a hostname using second hostname's ip" do
       hostname = 'ghost-test-hostname.local'
       alias_hostname = 'ghost-test-alias-hostname.local'
