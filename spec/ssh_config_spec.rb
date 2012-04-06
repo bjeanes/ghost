@@ -3,9 +3,9 @@ require 'ghost/ssh_config'
 $ssh_config_template = File.expand_path(File.join(File.dirname(__FILE__), "ssh_config_template"))
 $ssh_config_file     = File.expand_path(File.join(File.dirname(__FILE__), "ssh_config"))
 
-describe SshConfig do
+describe Ghost::SshConfig do
   before(:all) do
-    class SshConfig
+    class Ghost::SshConfig
       @@ssh_config = $ssh_config_file
     end
   end
@@ -13,7 +13,7 @@ describe SshConfig do
   after  { `rm -f #{$ssh_config_file.inspect}` }
 
   subject do
-    SshConfig
+    Ghost::SshConfig
   end
 
   it "has an Host" do
@@ -42,7 +42,7 @@ describe SshConfig do
       subject.list.should be_instance_of(Array)
     end
 
-    it "contains instances of SshConfig" do
+    it "contains instances of Ghost::SshConfig" do
       subject.empty!
       subject.add(
         :host => "miami-b01",
@@ -52,7 +52,7 @@ describe SshConfig do
 
       config = subject.list
 
-      (config = subject.list.first).should be_instance_of(SshConfig)
+      (config = subject.list.first).should be_instance_of(Ghost::SshConfig)
 
       config.host.should eql("miami-b01")
       config.hostname.should eql("192.168.227.128")
@@ -61,7 +61,7 @@ describe SshConfig do
     end
 
     it "parses the .ssh/config format" do
-      configs = SshConfig.list
+      configs = Ghost::SshConfig.list
       configs.should have(3).items
 
       configs[0].host.should eql("example1")
