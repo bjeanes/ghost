@@ -50,15 +50,50 @@ describe Ghost::Host do
     end
 
     it "gets all hosts on a single /etc/hosts line" do
-      example = "127.0.0.1\tproject_a.local\t\t\tproject_b.local   project_c.local"
-      File.open($hosts_file, 'w') {|f| f << example}
+      example = <<-EoEx
+              127.0.0.1      localhost.localdomain
+              # ghost start
+                 123.123.123.1     project_a.local\t\tproject_b.local   project_c.local
+                 127.0.0.1         local.bb
+              # ghost end
+      EoEx
+      File.open($hosts_file, 'w') {|f| f << example.gsub!(/^\s*/, '')}
       hosts = Ghost::Host.list
-      hosts.should have(3).items
-      hosts.map{|h|h.ip}.uniq.should == ['127.0.0.1']
-      hosts.map{|h|h.host}.sort.should == %w[project_a.local project_b.local project_c.local]
+      hosts.should have(4).items
+      hosts.map{|h|h.ip}.uniq.sort.should == ['123.123.123.1', '127.0.0.1']
+      hosts.map{|h|h.host}.sort.should == %w[local.bb project_a.local project_b.local project_c.local]
+
       Ghost::Host.add("project_d.local")
-      Ghost::Host.list.should have(4).items
+      Ghost::Host.list.should have(5).items
     end
+  end
+
+
+  it "does not change hosts files outside of control tokens" do
+    f = File.open($hosts_file, 'w')
+    f.write "10.0.0.23 adserver.example.com\n"
+    f.close
+    hosts = Ghost::Host.list
+    hosts.should have(0).items
+
+    hostname = "ghost-test-hostname-b.local"
+    Ghost::Host.add(hostname)
+    Ghost::Host.list.should have(1).items
+
+    hostsfile = File.read($hosts_file)
+    hostsfile.should =~ /^10.0.0.23 adserver.example.com\n/
+  end
+
+  it "adds control tokens to untouched hosts files" do
+    f = File.open($hosts_file, 'w')
+    f.write "10.0.0.23 adserver.example.com\n"
+    f.close
+    hostname = "ghost-test-hostname-b.local"
+    ip = '123.45.67.89'
+    Ghost::Host.add(hostname, ip)
+
+    hostsfile = File.read($hosts_file)
+    hostsfile.should =~ /# ghost start\n#{ip}\s+#{hostname}\n# ghost end/
   end
 
   describe "#to_s" do
