@@ -2,6 +2,7 @@ require 'socket'
 
 module Ghost
   class Host
+
     attr_reader :host, :ip
 
     def initialize(host, ip)
@@ -64,7 +65,7 @@ module Ghost
 
             new_host
           else
-            raise "Can not overwrite existing record"
+            raise Ghost::RecordExists, "Can not overwrite existing record"
           end
         end
       end
