@@ -24,7 +24,7 @@ module Ghost
       protected :new
 
       def list
-        with_exclusive_file_access do |file|
+        with_exclusive_file_access(true) do |file|
           entries = []
           in_ghost_area = false
           file.pos = 0
@@ -100,13 +100,14 @@ module Ghost
 
       protected
 
-      def with_exclusive_file_access
+      def with_exclusive_file_access(read_only = false)
         return_val = nil
+        flag = read_only ? 'r' : 'r+'
 
         if @_file
           return_val = yield @_file
         else
-          File.open(@@hosts_file, 'r+') do |f|
+          File.open(@@hosts_file, flag) do |f|
             f.flock File::LOCK_EX
             begin
               @_file = f
