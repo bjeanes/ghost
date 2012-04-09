@@ -2,10 +2,10 @@ require 'socket'
 
 module Ghost
   class Host
-    ListCmd = "dscl localhost -list /Local/Default/Hosts 2>&1"
-    ReadCmd = "dscl localhost -read /Local/Default/Hosts/%s 2>&1"
-    CreateCmd = "sudo dscl localhost -create /Local/Default/Hosts/%s IPAddress %s 2>&1"
-    DeleteCmd = "sudo dscl localhost -delete /Local/Default/Hosts/%s 2>&1"
+    ListCmd   = "dscl localhost -list /Local/Default/Hosts 2>&1"
+    ReadCmd   = "dscl localhost -read /Local/Default/Hosts/%s 2>&1"
+    CreateCmd = "dscl localhost -create /Local/Default/Hosts/%s IPAddress %s 2>&1"
+    DeleteCmd = "dscl localhost -delete /Local/Default/Hosts/%s 2>&1"
 
     class << self
       protected :new
