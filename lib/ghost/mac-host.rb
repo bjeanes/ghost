@@ -26,7 +26,7 @@ module Ghost
           flush!
           find_by_host(host)
         else
-          raise "Can not overwrite existing record"
+          raise Ghost::RecordExists, "Can not overwrite existing record"
         end
       end
 

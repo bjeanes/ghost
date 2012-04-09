@@ -1,5 +1,10 @@
 $: << File.dirname(__FILE__)
 
+module Ghost
+  class RecordExists < StandardError
+  end
+end
+
 require 'rbconfig'
 
 case RbConfig::CONFIG['host_os']
