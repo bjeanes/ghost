@@ -1,7 +1,5 @@
 #!/usr/bin/env ruby
 
-require File.expand_path(File.dirname(__FILE__) + '/../lib/ghost')
-
 def help_text(exit_code = 0)
   script_name = File.basename $0
   puts """USAGE: #{script_name} add <host> <hostname> [--user=<user>] [--port=<port>]

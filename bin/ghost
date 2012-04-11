@@ -1,9 +1,5 @@
 #!/usr/bin/env ruby
 #
-#  Created by Bodaniel Jeanes on 2008-8-19.
-#  Copyright (c) 2008. All rights reserved.
-
-require File.expand_path(File.dirname(__FILE__) + '/../lib/ghost')
 require 'open-uri'
 
 def help_text(exit_code = 0)
@@ -15,7 +11,7 @@ def help_text(exit_code = 0)
        #{script_name} list [<filter>]
        #{script_name} empty
        #{script_name} export
-       #{script_name} import <file>
+       #{script_name} import <file>                                       a
 """
   exit(exit_code)
 end
