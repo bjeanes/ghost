@@ -20,3 +20,4 @@ when /linux/
 end
 
 require 'ghost/ssh_config'
+require 'ghost/version'

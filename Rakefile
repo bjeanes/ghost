@@ -1,28 +1,36 @@
-require 'rubygems'
-require 'rake/gempackagetask'
-require 'rubygems/specification'
-require 'date'
+$: << File.expand_path(File.join(File.dirname(__FILE__), 'lib'))
 
-Dir['tasks/**/*.rake'].each { |rake| load rake }
+desc "Generate gemspec"
+task :gemspec do
+  require 'rubygems/specification'
+  require 'ghost/version'
+  require 'date'
 
+  spec = Gem::Specification.new do |s|
+    s.specification_version = 3 if s.respond_to? :specification_version=
+    s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
 
-#### MISC TASKS ####
+    s.author            = "Bodaniel Jeanes"
+    s.email             = "me@bjeanes.com"
 
-desc "list tasks"
-task :default do
-  puts `rake -T`
-end
+    s.name              = 'ghost'
+    s.version           = Ghost::VERSION
+    s.summary           = "Allows you to create, list, and modify local hostnames"
+    s.description       = s.summary
+    s.homepage          = "http://github.com/bjeanes/ghost"
+    s.rubyforge_project = 'ghost'
 
-desc "Outstanding TODO's"
-task :todo do
-  files = ["**/*.{rb,rake}" "bin/*", "README.mkdn"]
+    s.date              = Date.today.strftime
 
-  File.open('TODO','w') do |f|
-      FileList[*files].egrep(/TODO|FIXME/) do |file, line, text|
-      output = "#{file}:#{line} - #{text.chomp.gsub(/^\s+|\s+$/ , "")}"
+    s.files             = %w(LICENSE README) + Dir.glob("{bin,lib,spec}/**/*")
+    s.require_paths     = %w[lib]
+    s.test_files        = s.files.select { |path| path =~ /^spec\// }
+    s.executables       += %w[ghost ghost-ssh]
+    s.autorequire       = "ghost"
+    s.has_rdoc          = false
+  end
 
-      puts output
-      f.puts output
-    end
+  File.open("ghost.gemspec", "w") do |file|
+    file.puts spec.to_ruby
   end
 end
