@@ -28,6 +28,8 @@ task :gemspec do
     s.executables       += %w[ghost ghost-ssh]
     s.autorequire       = "ghost"
     s.has_rdoc          = false
+
+    s.add_development_dependency "rspec", "2.9.0"
   end
 
   File.open("ghost.gemspec", "w") do |file|
