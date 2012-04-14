@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.description = "Allows you to create, list, and modify local hostnames"
   s.email = "me@bjeanes.com"
   s.executables = ["ghost", "ghost-ssh"]
-  s.files = ["LICENSE", "README", "bin/ghost", "bin/ghost-ssh", "lib/ghost", "lib/ghost/linux-host.rb", "lib/ghost/mac-host.rb", "lib/ghost/ssh_config.rb", "lib/ghost/version.rb", "lib/ghost.rb", "spec/etc_hosts_spec.rb", "spec/ghost_spec.rb", "spec/spec.opts", "spec/spec_helper.rb", "spec/ssh_config_spec.rb", "spec/ssh_config_template"]
+  s.files = ["LICENSE", "README.md", "bin/ghost", "bin/ghost-ssh", "lib/ghost", "lib/ghost/cli.rb", "lib/ghost/linux-host.rb", "lib/ghost/mac-host.rb", "lib/ghost/ssh_config.rb", "lib/ghost/version.rb", "lib/ghost.rb", "spec/fixtures", "spec/fixtures/ssh_config_template", "spec/ghost", "spec/ghost/cli_spec.rb", "spec/ghost/ssh_config_spec.rb", "spec/spec_helper.rb"]
   s.homepage = "http://github.com/bjeanes/ghost"
   s.require_paths = ["lib"]
   s.rubyforge_project = "ghost"
