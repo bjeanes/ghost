@@ -18,4 +18,27 @@ describe Ghost::Cli do
       ghost("-v").should == "ghost #{Ghost::VERSION}"
     end
   end
+
+  describe "modify"
+  describe "delete"
+  describe "delete_matching"
+  describe "list" do
+    before do
+      Ghost::Host.stub(:list => [
+        Ghost::Host.new("gist.github.com", "10.0.0.1"),
+        Ghost::Host.new("google.com", "192.168.1.10")
+      ])
+    end
+
+    it "outputs of all hostnames" do
+      ghost("list").should == %"
+        Listing 2 host(s):
+          gist.github.com -> 10.0.0.1
+               google.com -> 192.168.1.10
+      ".gsub(/^\s{8}/,'').strip.chomp
+    end
+  end
+  describe "empty"
+  describe "export"
+  describe "import"
 end
