@@ -77,9 +77,11 @@ describe Ghost::Cli do
     end
   end
 
-  describe "modify"
+  describe "modify"          # TODO: remove in favor of 'add -f'
+  describe "delete_matching" # TODO: remove in favor of 'delete' with a pattern
+
   describe "delete"
-  describe "delete_matching"
+
   describe "list" do
     before do
       Ghost::Host.stub(:list => [
