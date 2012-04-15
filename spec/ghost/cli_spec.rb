@@ -12,6 +12,8 @@ describe Ghost::Cli do
     out.read.chomp
   end
 
+  describe "environment configuration" # via GHOST_OPTS (see OptionParser#environment)
+
   describe "--version" do
     it "outputs the gem name and version" do
       ghost("--version").should == "ghost #{Ghost::VERSION}"
