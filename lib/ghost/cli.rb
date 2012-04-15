@@ -36,6 +36,11 @@ module Ghost
           exit
         end
 
+        o.subcommand 'export' do
+          export
+          exit
+        end
+
         o.subcommand 'empty' do
           empty
           exit
@@ -61,6 +66,12 @@ module Ghost
       puts "Listing #{hosts.size} host(s):"
       hosts.each do |host|
         puts "#{host.name.rjust(pad + 2)} -> #{host.ip}"
+      end
+    end
+
+    def export
+      Ghost::Host.list.each do |host|
+        puts "#{host.ip} #{host.name}"
       end
     end
 

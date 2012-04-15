@@ -115,6 +115,18 @@ describe Ghost::Cli do
     end
   end
 
-  describe "export"
+  describe "export" do
+    it "outputs all hosts one-per-line in hosts file format" do
+      Ghost::Host.stub(:list => [
+        Ghost::Host.new("gist.github.com", "10.0.0.1"),
+        Ghost::Host.new("google.com", "192.168.1.10")
+      ])
+
+      ghost("export").should == <<-EOE.gsub(/^\s+/,'').chomp
+        10.0.0.1 gist.github.com
+        192.168.1.10 google.com
+        EOE
+    end
+  end
   describe "import"
 end
