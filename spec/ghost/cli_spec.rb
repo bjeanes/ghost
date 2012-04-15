@@ -94,7 +94,7 @@ describe Ghost::Cli do
           Listing 2 host(s):
             gist.github.com -> 10.0.0.1
                  google.com -> 192.168.1.10
-        ".gsub(/^\s{8}/,'').strip.chomp
+        ".gsub(/^\s{10}/,'').strip.chomp
       end
     end
 
