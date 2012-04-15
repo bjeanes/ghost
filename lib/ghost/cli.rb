@@ -5,15 +5,17 @@ require 'optparse/version'
 
 module Ghost
   class Cli
-    attr_accessor :out, :parser
+    attr_accessor :out, :parser, :args
 
-    def initialize(out = STDOUT)
-      self.out = out
+    def initialize(args, out = STDOUT)
+      self.args = args
+      self.out  = out
+
       setup_parser
     end
 
-    def parse(args)
-      parser.parse(args)
+    def parse
+      parser.send :parse!, args
     end
 
     private
@@ -24,6 +26,11 @@ module Ghost
           puts parser.ver
         end
 
+        o.subcommand 'add' do
+          add
+          exit
+        end
+
         o.subcommand 'list' do
           list
           exit
@@ -32,6 +39,13 @@ module Ghost
 
       parser.program_name = "ghost"
       parser.version = Ghost::VERSION
+    end
+
+    def add
+      host = Ghost::Host.new(*args.take(2))
+      Ghost::Host.add(host)
+
+      puts "  [Adding] #{host.name} -> #{host.ip}"
     end
 
     def list
