@@ -86,12 +86,18 @@ describe Ghost::Cli do
       ])
     end
 
-    it "outputs of all hostnames" do
-      ghost("list").should == %"
-        Listing 2 host(s):
-          gist.github.com -> 10.0.0.1
-               google.com -> 192.168.1.10
-      ".gsub(/^\s{8}/,'').strip.chomp
+    context "with no filtering parameter" do
+      it "outputs all hostnames" do
+        ghost("list").should == %"
+          Listing 2 host(s):
+            gist.github.com -> 10.0.0.1
+                 google.com -> 192.168.1.10
+        ".gsub(/^\s{8}/,'').strip.chomp
+      end
+    end
+
+    context "with a filtering parameter" do
+      it "outputs entries whose hostname or IP match the filter"
     end
   end
   describe "empty"
