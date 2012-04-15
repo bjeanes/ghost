@@ -102,7 +102,19 @@ describe Ghost::Cli do
       it "outputs entries whose hostname or IP match the filter"
     end
   end
-  describe "empty"
+
+  describe "empty" do
+    it 'empties the list of hosts' do
+      Ghost::Host.should_receive(:empty!)
+      ghost("empty")
+    end
+
+    it 'outputs a summary of the operation' do
+      Ghost::Host.stub(:empty!)
+      ghost("empty").should == "  [Emptying] Done."
+    end
+  end
+
   describe "export"
   describe "import"
 end

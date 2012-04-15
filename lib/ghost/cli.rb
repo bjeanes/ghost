@@ -35,6 +35,11 @@ module Ghost
           list
           exit
         end
+
+        o.subcommand 'empty' do
+          empty
+          exit
+        end
       end
 
       parser.program_name = "ghost"
@@ -57,6 +62,16 @@ module Ghost
       hosts.each do |host|
         puts "#{host.name.rjust(pad + 2)} -> #{host.ip}"
       end
+    end
+
+    def empty
+      print "  [Emptying] "
+      Ghost::Host.empty!
+      puts "Done."
+    end
+
+    def print(*args)
+      out.print(*args)
     end
 
     def puts(*args)
