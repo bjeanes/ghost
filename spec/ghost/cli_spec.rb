@@ -77,10 +77,23 @@ describe Ghost::Cli do
     end
   end
 
-  describe "modify"          # TODO: remove in favor of 'add -f'
-  describe "delete_matching" # TODO: remove in favor of 'delete' with a pattern
+  describe "modify" do
+    it 'outputs deprecation warning' # TODO: remove in favor of 'add -f'
+  end
 
-  describe "delete"
+  describe "delete_matching" do
+    it 'outputs deprecation warning' # TODO: remove in favor of 'delete' with a pattern
+  end
+
+  describe "delete" do
+    context 'with filtering pattern' do
+      it 'deletes all entries whose hostname matches the pattern'
+    end
+
+    context 'without filtering pattern' do
+      it 'deletes the specified hostname'
+    end
+  end
 
   describe "list" do
     before do
