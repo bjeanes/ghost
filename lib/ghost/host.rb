@@ -4,5 +4,13 @@ module Ghost
     alias :host :name
     alias :hostname :name
     alias :ip_address :ip
+
+    def <=>(host)
+      if ip == host.ip
+        name <=> host.name
+      else
+        ip <=> host.ip
+      end
+    end
   end
 end

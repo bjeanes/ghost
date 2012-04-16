@@ -25,6 +25,26 @@ describe Ghost::Store::HostsFileStore do
         store.all.should == []
       end
     end
+
+    context 'with some ghost-managed hosts in the file' do
+      let(:contents) do
+        <<-EOF.gsub(/^\s+/,'')
+        127.0.0.1 localhost localhost.localdomain
+        # ghost start
+        1.2.3.4 bjeanes.com
+        2.3.4.5 my-app.com subdomain.my-app.com
+        # ghost end
+        EOF
+      end
+
+      it 'returns an array with one Ghost::Host per ghost-managed host in the hosts file' do
+        store.all.should == [
+          Ghost::Host.new('bjeanes.com', '1.2.3.4'),
+          Ghost::Host.new('my-app.com', '2.3.4.5'),
+          Ghost::Host.new('subdomain.my-app.com', '2.3.4.5')
+        ]
+      end
+    end
   end
 
   describe "#find"

@@ -1,6 +1,8 @@
 require 'set'
 require 'stringio'
 
+require 'ghost/host'
+
 module Ghost
   module Store
     class HostsFileStore
@@ -22,7 +24,15 @@ module Ghost
       end
 
       def all
-        []
+        result = []
+        sync do |buffer|
+          buffer.each do |ip, hosts|
+            hosts.each do |host|
+              result << Ghost::Host.new(host, ip)
+            end
+          end
+        end
+        result.sort
       end
 
       def delete(host)
@@ -58,15 +68,18 @@ module Ghost
       end
 
       def sync
+        result = nil
         with_buffer do |buffer|
           original_lines = read_file(buffer)
 
-          yield(buffer)
+          result = yield(buffer)
 
           io.puts(original_lines)
           io.puts(content(buffer))
           io.rewind
         end
+
+        result
       end
 
       def read_file(buffer)
