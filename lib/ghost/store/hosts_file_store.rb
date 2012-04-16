@@ -6,8 +6,8 @@ require 'ghost/host'
 module Ghost
   module Store
     class HostsFileStore
-      START_TOKEN   = "# ghost start"
-      END_TOKEN     = "# ghost end"
+      START_TOKEN = "# ghost start"
+      END_TOKEN   = "# ghost end"
 
       attr_accessor :io
 
@@ -18,6 +18,7 @@ module Ghost
       def add(host)
         sync do |buffer|
           buffer[host.ip] << host.name
+          buffer_changed!
         end
 
         true
@@ -46,7 +47,7 @@ module Ghost
       private # TODO: Add buffer management code to new class
 
       def buffer_changed?
-        !!@buffer_changed
+        @buffer_changed
       end
 
       def buffer_changed!
@@ -54,6 +55,7 @@ module Ghost
       end
 
       def with_buffer
+        @buffer_changed = false
         yield(Hash.new { |hash, key| hash[key] = SortedSet.new })
       end
 
@@ -74,8 +76,12 @@ module Ghost
 
           result = yield(buffer)
 
-          io.puts(original_lines)
-          io.puts(content(buffer))
+          if buffer_changed?
+            io.truncate(0)
+            io.puts(original_lines)
+            io.puts(content(buffer))
+          end
+
           io.rewind
         end
 
@@ -100,7 +106,6 @@ module Ghost
         end
 
         io.rewind
-        io.truncate(0)
 
         original_lines
       end

@@ -44,6 +44,11 @@ describe Ghost::Store::HostsFileStore do
           Ghost::Host.new('subdomain.my-app.com', '2.3.4.5')
         ]
       end
+
+      it "shouldn't write to the file" do
+        file.close_write
+        store.all
+      end
     end
   end
 
