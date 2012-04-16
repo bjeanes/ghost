@@ -1,6 +1,8 @@
 require File.expand_path("#{File.dirname(__FILE__)}/../spec_helper.rb")
 require 'ghost/cli'
 
+require 'tempfile'
+
 describe Ghost::Cli do
   def ghost(args)
     out = StringIO.new
@@ -143,5 +145,58 @@ describe Ghost::Cli do
         EOE
     end
   end
-  describe "import"
+  describe "import" do
+    context "with current export format" do
+      let(:import) do
+        <<-EOI.gsub(/^\s+/,'').chomp
+        1.2.3.4 foo.com
+        2.3.4.5 bar.com
+        EOI
+      end
+
+      let(:foo_com) { stub(:name => 'foo.com', :ip => '1.2.3.4') }
+      let(:bar_com) { stub(:name => 'bar.com', :ip => '2.3.4.5') }
+
+      context 'with no file name'
+      context 'with STDIN sudo file name (-)'
+
+      context 'with a file name' do
+        it 'adds each entry' do
+          Ghost::Host.stub(:new).with(foo_com.name, foo_com.ip).and_return(foo_com)
+          Ghost::Host.stub(:new).with(bar_com.name, bar_com.ip).and_return(bar_com)
+
+          Ghost::Host.should_receive(:add).with(foo_com)
+          Ghost::Host.should_receive(:add).with(bar_com)
+
+          file = Tempfile.new('import')
+          file.write(import)
+          file.close
+
+          ghost("import #{file.path}")
+        end
+      end
+
+      context 'with multiple file names'
+
+      context 'when an entry is already present' do
+        context 'without the -f flag' do
+          it 'skips the existing entries'
+          it 'prints a warning about skipped entries'
+        end
+
+        context 'with the -f flag' do
+          it 'overwrites the existing entries'
+        end
+      end
+
+      context 'with multiple hosts per line' do
+        let(:import) do
+          <<-EOI.gsub(/^\s+/,'').chomp
+          1.2.3.4 foo.com
+          2.3.4.5 bar.com subdomain.bar.com
+          EOI
+        end
+      end
+    end
+  end
 end

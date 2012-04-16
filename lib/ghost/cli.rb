@@ -36,6 +36,11 @@ module Ghost
           exit
         end
 
+        o.subcommand 'import' do
+          import
+          exit
+        end
+
         o.subcommand 'export' do
           export
           exit
@@ -52,9 +57,11 @@ module Ghost
     end
 
     def add
-      host = Ghost::Host.new(*args.take(2))
-      Ghost::Host.add(host)
+      add_host Ghost::Host.new(*args.take(2))
+    end
 
+    def add_host(host)
+      Ghost::Host.add(host)
       puts "  [Adding] #{host.name} -> #{host.ip}"
     end
 
@@ -72,6 +79,17 @@ module Ghost
     def export
       Ghost::Host.list.each do |host|
         puts "#{host.ip} #{host.name}"
+      end
+    end
+
+    def import
+      files = args
+
+      files.each do |file|
+        File.readlines(file).each do |line|
+          ip, name = *line.split(/\s+/)
+          add_host Ghost::Host.new(name, ip)
+        end
       end
     end
 
