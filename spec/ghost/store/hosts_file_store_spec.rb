@@ -30,11 +30,11 @@ describe Ghost::Store::HostsFileStore do
   describe "#find"
 
   describe "#add" do
-    context 'with no ghost-managed hosts in the file' do
-      let(:host) { OpenStruct.new(:name => "google.com", :ip => "127.0.0.1") }
+    let(:host) { OpenStruct.new(:name => "google.com", :ip => "127.0.0.1") }
 
+    context 'with no ghost-managed hosts in the file' do
       it 'returns true' do
-        store.add(host).should == true
+        store.add(host).should be_true
       end
 
       it 'adds the new host between delimeters' do
@@ -53,13 +53,26 @@ describe Ghost::Store::HostsFileStore do
         <<-EOF.gsub(/^\s+/,'')
           127.0.0.1 localhost localhost.localdomain
           # ghost start
-          127.0.0.1 google.com
+          192.168.1.1 github.com
           # ghost end
         EOF
       end
 
-      it 'adds new entry between tokens' do
+      context 'and a new host name' do
+        it 'adds new entry between tokens' do
+          store.add(host)
+          file.read.should == <<-EOF.gsub(/^\s+/,'')
+            127.0.0.1 localhost localhost.localdomain
+            # ghost start
+            127.0.0.1 google.com
+            192.168.1.1 github.com
+            # ghost end
+          EOF
+        end
 
+        it 'returns true' do
+          store.add(host).should be_true
+        end
       end
     end
   end
@@ -69,7 +82,7 @@ describe Ghost::Store::HostsFileStore do
       let(:host) { OpenStruct.new(:name => "localhost", :ip => "127.0.0.1") }
 
       it 'returns false' do
-        store.delete(host).should == false
+        store.delete(host).should be_false
       end
 
       it 'has no effect' do
@@ -82,7 +95,7 @@ describe Ghost::Store::HostsFileStore do
   describe "#empty" do
     context 'with no ghost-managed hosts in the file' do
       it 'returns false' do
-        store.empty.should == false
+        store.empty.should be_false
       end
 
       it 'has no effect' do
