@@ -1,7 +1,8 @@
 $: << File.dirname(__FILE__)
 
-require 'ghost/version'
-
 module Ghost
 end
+
+require 'ghost/version'
+require 'ghost/host'
 
