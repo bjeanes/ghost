@@ -1,6 +1,8 @@
 require File.expand_path("#{File.dirname(__FILE__)}/../../spec_helper.rb")
 require 'ghost/store/hosts_file_store'
 
+require 'ostruct'
+
 describe Ghost::Store::HostsFileStore do
   subject     { store }
 
@@ -29,7 +31,7 @@ describe Ghost::Store::HostsFileStore do
 
   describe "#add" do
     context 'with no ghost-managed hosts in the file' do
-      let(:host) { stub(:name => "google.com", :ip => "127.0.0.1") }
+      let(:host) { OpenStruct.new(:name => "google.com", :ip => "127.0.0.1") }
 
       it 'returns true' do
         store.add(host).should == true
@@ -45,11 +47,26 @@ describe Ghost::Store::HostsFileStore do
         EOF
       end
     end
+
+    context 'with existing ghost-managed hosts in the file' do
+      let(:contents) do
+        <<-EOF.gsub(/^\s+/,'')
+          127.0.0.1 localhost localhost.localdomain
+          # ghost start
+          127.0.0.1 google.com
+          # ghost end
+        EOF
+      end
+
+      it 'adds new entry between tokens' do
+
+      end
+    end
   end
 
   describe "#delete" do
     context 'with no ghost-managed hosts in the file' do
-      let(:host) { stub(:name => "localhost", :ip => "127.0.0.1") }
+      let(:host) { OpenStruct.new(:name => "localhost", :ip => "127.0.0.1") }
 
       it 'returns false' do
         store.delete(host).should == false
