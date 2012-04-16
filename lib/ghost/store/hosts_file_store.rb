@@ -33,7 +33,7 @@ module Ghost
         false
       end
 
-      private
+      private # TODO: Add buffer management code to new class
 
       def buffer_changed?
         !!@buffer_changed
