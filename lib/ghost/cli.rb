@@ -15,7 +15,7 @@ module Ghost
     end
 
     def parse
-      parser.send :parse!, args
+      parser.parse! args
     end
 
     private
