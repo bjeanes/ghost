@@ -5,15 +5,15 @@ module Ghost
 
       def initialize(io)
         self.io = io
+
       end
 
       def add(host)
-        io.seek(io.size)
-        io.puts "# ghost start"
-        io.puts "#{host.ip} #{host.name}"
-        io.puts "# ghost end"
-        io.flush
-        io.rewind
+        manage do
+          puts "# ghost start"
+          puts "#{host.ip} #{host.name}"
+          puts "# ghost end"
+        end
 
         true
       end
@@ -28,6 +28,15 @@ module Ghost
 
       def empty
         false
+      end
+
+      private
+
+      def manage(&block)
+        io.seek(io.size)
+        io.instance_eval(&block)
+        io.flush
+        io.rewind
       end
     end
   end
