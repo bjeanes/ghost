@@ -58,8 +58,26 @@ describe Ghost::Store::HostsFileStore do
         EOF
       end
 
-      context 'and a new host name' do
-        it 'adds new entry between tokens' do
+      context 'when adding to an existing IP' do
+        before { host.stub(:ip => '192.168.1.1') }
+
+        it 'adds to existing entry between tokens, listing host names in alphabetical order' do
+          store.add(host)
+          file.read.should == <<-EOF.gsub(/^\s+/,'')
+            127.0.0.1 localhost localhost.localdomain
+            # ghost start
+            192.168.1.1 github.com google.com
+            # ghost end
+          EOF
+        end
+
+        it 'returns true' do
+          store.add(host).should be_true
+        end
+      end
+
+      context 'when adding a new IP' do
+        it 'adds new entry between tokens, in numerical order' do
           store.add(host)
           file.read.should == <<-EOF.gsub(/^\s+/,'')
             127.0.0.1 localhost localhost.localdomain
