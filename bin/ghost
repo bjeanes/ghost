@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+
+require 'ghost/cli'
+
+Ghost::Cli.new(ARGV).parse

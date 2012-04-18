@@ -25,7 +25,7 @@ task :gemspec do
     s.files             = %w(LICENSE README.md) + Dir.glob("{bin,lib,spec}/**/*")
     s.require_paths     = %w[lib]
     s.test_files        = s.files.select { |path| path =~ /^spec\// }
-    s.executables       += %w[ghost ghost-ssh]
+    s.executables       += %w[ghost]
     s.autorequire       = "ghost"
     s.has_rdoc          = false
 
