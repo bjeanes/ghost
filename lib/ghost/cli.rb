@@ -22,10 +22,6 @@ module Ghost
 
     def setup_parser
       self.parser = OptionParser.new do |o|
-        o.on_head '-v', '--version' do
-          puts parser.ver
-        end
-
         o.subcommand 'add' do
           add
           exit
@@ -49,6 +45,10 @@ module Ghost
         o.subcommand 'empty' do
           empty
           exit
+        end
+
+        o.on_tail '-v', '--version' do
+          puts parser.ver
         end
       end
 
