@@ -61,12 +61,12 @@ module Ghost
     end
 
     def add_host(host)
-      Ghost::Host.add(host)
+      store.add(host)
       puts "  [Adding] #{host.name} -> #{host.ip}"
     end
 
     def list
-      hosts = Ghost::Host.list
+      hosts = store.list
 
       pad = hosts.map {|h| h.name.length }.max
 
@@ -77,7 +77,7 @@ module Ghost
     end
 
     def export
-      Ghost::Host.list.each do |host|
+      store.list.each do |host|
         puts "#{host.ip} #{host.name}"
       end
     end
@@ -95,7 +95,7 @@ module Ghost
 
     def empty
       print "  [Emptying] "
-      Ghost::Host.empty!
+      store.empty!
       puts "Done."
     end
 
@@ -105,6 +105,10 @@ module Ghost
 
     def puts(*args)
       out.puts(*args)
+    end
+
+    def store
+      Ghost.store
     end
   end
 end

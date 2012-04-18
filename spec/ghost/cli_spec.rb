@@ -14,6 +14,9 @@ describe Ghost::Cli do
     out.read.chomp
   end
 
+  before { Ghost.store = store }
+  let(:store) { mock }
+
   describe "environment configuration" # via GHOST_OPTS (see OptionParser#environment)
 
   describe "--version" do
@@ -29,12 +32,12 @@ describe Ghost::Cli do
       let(:host) { stub(:name => "my-app.local", :ip => "127.0.0.1") }
 
       it "adds the host pointing to 127.0.0.1" do
-        Ghost::Host.should_receive(:add).with(host)
+        store.should_receive(:add).with(host)
         ghost("add my-app.local")
       end
 
       it "outputs a summary of the operation" do
-        Ghost::Host.stub(:add)
+        store.stub(:add)
         ghost("add my-app.local").should == "  [Adding] my-app.local -> 127.0.0.1"
       end
 
@@ -47,12 +50,12 @@ describe Ghost::Cli do
         let(:host) { stub(:name => "my-app.local", :ip => "192.168.1.1") }
 
         it "adds the host pointing to the IP address" do
-          Ghost::Host.should_receive(:add).with(host)
+          store.should_receive(:add).with(host)
           ghost("add my-app.local 192.168.1.1")
         end
 
         it "outputs a summary of the operation" do
-          Ghost::Host.stub(:add)
+          store.stub(:add)
           ghost("add my-app.local 192.168.1.1").should == "  [Adding] my-app.local -> 192.168.1.1"
         end
       end
@@ -62,12 +65,12 @@ describe Ghost::Cli do
         let(:host) { stub(:name => "my-app.local", :ip => "74.125.225.99") }
 
         it "adds the host pointing to the IP address" do
-          Ghost::Host.should_receive(:add).with(host)
+          store.should_receive(:add).with(host)
           ghost("add my-app.local google.com")
         end
 
         it "outputs a summary of the operation" do
-          Ghost::Host.stub(:add)
+          store.stub(:add)
           ghost("add my-app.local google.com").should == "  [Adding] my-app.local -> 74.125.225.99"
         end
 
@@ -99,7 +102,7 @@ describe Ghost::Cli do
 
   describe "list" do
     before do
-      Ghost::Host.stub(:list => [
+      store.stub(:list => [
         Ghost::Host.new("gist.github.com", "10.0.0.1"),
         Ghost::Host.new("google.com", "192.168.1.10")
       ])
@@ -122,19 +125,19 @@ describe Ghost::Cli do
 
   describe "empty" do
     it 'empties the list of hosts' do
-      Ghost::Host.should_receive(:empty!)
+      store.should_receive(:empty!)
       ghost("empty")
     end
 
     it 'outputs a summary of the operation' do
-      Ghost::Host.stub(:empty!)
+      store.stub(:empty!)
       ghost("empty").should == "  [Emptying] Done."
     end
   end
 
   describe "export" do
     it "outputs all hosts one-per-line in hosts file format" do
-      Ghost::Host.stub(:list => [
+      store.stub(:list => [
         Ghost::Host.new("gist.github.com", "10.0.0.1"),
         Ghost::Host.new("google.com", "192.168.1.10")
       ])
@@ -165,8 +168,8 @@ describe Ghost::Cli do
           Ghost::Host.stub(:new).with(foo_com.name, foo_com.ip).and_return(foo_com)
           Ghost::Host.stub(:new).with(bar_com.name, bar_com.ip).and_return(bar_com)
 
-          Ghost::Host.should_receive(:add).with(foo_com)
-          Ghost::Host.should_receive(:add).with(bar_com)
+          store.should_receive(:add).with(foo_com)
+          store.should_receive(:add).with(bar_com)
 
           file = Tempfile.new('import')
           file.write(import)
