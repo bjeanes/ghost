@@ -1,5 +1,5 @@
 GEM = "ghost"
-GEM_VERSION = [0,2,8]
+GEM_VERSION = [0,3,0]
 AUTHOR = "Bodaniel Jeanes"
 EMAIL = "me@bjeanes.com"
 HOMEPAGE = "http://github.com/bjeanes/ghost"
@@ -10,7 +10,7 @@ spec = Gem::Specification.new do |s|
   s.rubyforge_project = GEM
   s.version = GEM_VERSION.join('.')
   s.has_rdoc = true
-  s.extra_rdoc_files = ["README", "LICENSE", 'TODO']
+  s.extra_rdoc_files = ["README.md", "LICENSE", 'TODO']
   s.rdoc_options << '--line-numbers'
   s.summary = SUMMARY
   s.description = s.summary
@@ -20,7 +20,7 @@ spec = Gem::Specification.new do |s|
   s.executables << 'ghost'
   s.executables << 'ghost-ssh'
   s.autorequire = GEM
-  s.files = %w(LICENSE README Rakefile TODO) + Dir.glob("{bin,lib,spec}/**/*")
+  s.files = %w(LICENSE README.md Rakefile TODO) + Dir.glob("{bin,lib,spec}/**/*")
 end
 
 Rake::GemPackageTask.new(spec) do |pkg|
