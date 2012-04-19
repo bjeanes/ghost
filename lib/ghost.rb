@@ -5,4 +5,5 @@ end
 
 require 'ghost/version'
 require 'ghost/host'
+require 'ghost/store'
 

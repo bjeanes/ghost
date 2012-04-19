@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.description = "Allows you to create, list, and modify local hostnames"
   s.email = "me@bjeanes.com"
   s.executables = ["ghost"]
-  s.files = ["LICENSE", "README.md", "bin/ghost", "lib/ghost", "lib/ghost/cli.rb", "lib/ghost/host.rb", "lib/ghost/store", "lib/ghost/store/dscl_store.rb", "lib/ghost/store/hosts_file_store.rb", "lib/ghost/store.rb", "lib/ghost/version.rb", "lib/ghost.rb", "spec/ghost", "spec/ghost/cli_spec.rb", "spec/ghost/host_spec.rb", "spec/ghost/store", "spec/ghost/store/dscl_store_spec.rb", "spec/ghost/store/hosts_file_store_spec.rb", "spec/ghost/store_spec.rb", "spec/spec_helper.rb"]
+  s.files = ["LICENSE", "README.md", "bin/ghost", "lib/ghost", "lib/ghost/cli", "lib/ghost/cli/add.rb", "lib/ghost/cli/task", "lib/ghost/cli/task/add.rb", "lib/ghost/cli/task/empty.rb", "lib/ghost/cli/task/export.rb", "lib/ghost/cli/task/import.rb", "lib/ghost/cli/task/list.rb", "lib/ghost/cli/task.rb", "lib/ghost/cli.rb", "lib/ghost/host.rb", "lib/ghost/store", "lib/ghost/store/dscl_store.rb", "lib/ghost/store/hosts_file_store.rb", "lib/ghost/store.rb", "lib/ghost/version.rb", "lib/ghost.rb", "spec/ghost", "spec/ghost/cli_spec.rb", "spec/ghost/host_spec.rb", "spec/ghost/store", "spec/ghost/store/dscl_store_spec.rb", "spec/ghost/store/hosts_file_store_spec.rb", "spec/ghost/store_spec.rb", "spec/spec_helper.rb"]
   s.homepage = "http://github.com/bjeanes/ghost"
   s.require_paths = ["lib"]
   s.rubyforge_project = "ghost"
@@ -23,14 +23,11 @@ Gem::Specification.new do |s|
     s.specification_version = 3
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<optparse-subcommand>, ["= 1.0.0.pre.2"])
       s.add_development_dependency(%q<rspec>, ["= 2.9.0"])
     else
-      s.add_dependency(%q<optparse-subcommand>, ["= 1.0.0.pre.2"])
       s.add_dependency(%q<rspec>, ["= 2.9.0"])
     end
   else
-    s.add_dependency(%q<optparse-subcommand>, ["= 1.0.0.pre.2"])
     s.add_dependency(%q<rspec>, ["= 2.9.0"])
   end
 end

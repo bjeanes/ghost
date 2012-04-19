@@ -38,7 +38,7 @@ describe Ghost::Cli do
 
       it "outputs a summary of the operation" do
         store.stub(:add)
-        ghost("add my-app.local").should == "  [Adding] my-app.local -> 127.0.0.1"
+        ghost("add my-app.local").should == "[Adding] my-app.local -> 127.0.0.1"
       end
 
       context "when an entry for that hostname already exists" do
@@ -56,7 +56,7 @@ describe Ghost::Cli do
 
         it "outputs a summary of the operation" do
           store.stub(:add)
-          ghost("add my-app.local 192.168.1.1").should == "  [Adding] my-app.local -> 192.168.1.1"
+          ghost("add my-app.local 192.168.1.1").should == "[Adding] my-app.local -> 192.168.1.1"
         end
       end
 
@@ -71,7 +71,7 @@ describe Ghost::Cli do
 
         it "outputs a summary of the operation" do
           store.stub(:add)
-          ghost("add my-app.local google.com").should == "  [Adding] my-app.local -> 74.125.225.99"
+          ghost("add my-app.local google.com").should == "[Adding] my-app.local -> 74.125.225.99"
         end
 
         context "when the remote hostname can not be resolved" do
@@ -102,7 +102,7 @@ describe Ghost::Cli do
 
   describe "list" do
     before do
-      store.stub(:list => [
+      store.stub(:all => [
         Ghost::Host.new("gist.github.com", "10.0.0.1"),
         Ghost::Host.new("google.com", "192.168.1.10")
       ])
@@ -125,19 +125,19 @@ describe Ghost::Cli do
 
   describe "empty" do
     it 'empties the list of hosts' do
-      store.should_receive(:empty!)
+      store.should_receive(:empty)
       ghost("empty")
     end
 
     it 'outputs a summary of the operation' do
-      store.stub(:empty!)
-      ghost("empty").should == "  [Emptying] Done."
+      store.stub(:empty)
+      ghost("empty").should == "[Emptying] Done."
     end
   end
 
   describe "export" do
     it "outputs all hosts one-per-line in hosts file format" do
-      store.stub(:list => [
+      store.stub(:all => [
         Ghost::Host.new("gist.github.com", "10.0.0.1"),
         Ghost::Host.new("google.com", "192.168.1.10")
       ])

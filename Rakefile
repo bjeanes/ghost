@@ -29,7 +29,6 @@ task :gemspec do
     s.autorequire       = "ghost"
     s.has_rdoc          = false
 
-    s.add_dependency "optparse-subcommand", "1.0.0.pre.2"
     s.add_development_dependency "rspec", "2.9.0"
   end
 
