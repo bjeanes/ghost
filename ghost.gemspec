@@ -2,12 +2,12 @@
 
 Gem::Specification.new do |s|
   s.name = "ghost"
-  s.version = "0.2.8"
+  s.version = "1.0.0.pre"
 
-  s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
+  s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
   s.authors = ["Bodaniel Jeanes"]
   s.autorequire = "ghost"
-  s.date = "2012-04-18"
+  s.date = "2012-04-19"
   s.description = "Allows you to create, list, and modify local hostnames"
   s.email = "me@bjeanes.com"
   s.executables = ["ghost"]
