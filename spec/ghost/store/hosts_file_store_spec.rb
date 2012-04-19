@@ -1,22 +1,45 @@
-require File.expand_path("#{File.dirname(__FILE__)}/../../spec_helper.rb")
+require File.expand_path("#{File.dirname(__FILE__)}/../../spec_helper")
 require 'ghost/store/hosts_file_store'
 
+require 'tempfile'
 require 'ostruct'
 
 describe Ghost::Store::HostsFileStore do
-  subject     { store }
+  def write(content)
+    File.open(file_path, 'w') { |f| f.write(content) }
+  end
 
-  let(:store) { described_class.new(file) }
-  let(:file)  { StringIO.new }
+  def read
+    File.read(file_path)
+  end
+
+  def no_write
+    File.any_instance.stub(:reopen).with(anything, /[aw]/).and_raise("no writing!")
+    File.any_instance.stub(:puts).and_raise("no writing!")
+    File.any_instance.stub(:print).and_raise("no writing!")
+    File.any_instance.stub(:write).and_raise("no writing!")
+    File.any_instance.stub(:<<).and_raise("no writing!")
+    File.any_instance.stub(:flush).and_raise("no writing!")
+  end
+
+  subject { store }
+
+  let(:file_path) { Tempfile.new("etc_hosts").tap { |f| f.close }.path }
+  let(:store)     { described_class.new(file_path) }
   let(:contents) do
     <<-EOF.gsub(/^\s+/,'')
     127.0.0.1 localhost localhost.localdomain
     EOF
   end
 
-  before do
-    file.write(contents)
-    file.rewind
+  before { write(contents) }
+
+  it 'manages the default file of /etc/hosts when no file path is provided' do
+    described_class.new.path.should == "/etc/hosts"
+  end
+
+  it 'manages the file at the provided path when given' do
+    described_class.new('xyz').path.should == 'xyz'
   end
 
   describe "#all" do
@@ -46,7 +69,7 @@ describe Ghost::Store::HostsFileStore do
       end
 
       it "shouldn't write to the file" do
-        file.close_write
+        no_write
         store.all
       end
     end
@@ -64,7 +87,7 @@ describe Ghost::Store::HostsFileStore do
 
       it 'adds the new host between delimeters' do
         store.add(host)
-        file.read.should == <<-EOF.gsub(/^\s+/,'')
+        read.should == <<-EOF.gsub(/^\s+/,'')
           127.0.0.1 localhost localhost.localdomain
           # ghost start
           127.0.0.1 google.com
@@ -88,7 +111,7 @@ describe Ghost::Store::HostsFileStore do
 
         it 'adds to existing entry between tokens, listing host names in alphabetical order' do
           store.add(host)
-          file.read.should == <<-EOF.gsub(/^\s+/,'')
+          read.should == <<-EOF.gsub(/^\s+/,'')
             127.0.0.1 localhost localhost.localdomain
             # ghost start
             192.168.1.1 github.com google.com
@@ -104,7 +127,7 @@ describe Ghost::Store::HostsFileStore do
       context 'when adding a new IP' do
         it 'adds new entry between tokens, in numerical order' do
           store.add(host)
-          file.read.should == <<-EOF.gsub(/^\s+/,'')
+          read.should == <<-EOF.gsub(/^\s+/,'')
             127.0.0.1 localhost localhost.localdomain
             # ghost start
             127.0.0.1 google.com
@@ -130,7 +153,7 @@ describe Ghost::Store::HostsFileStore do
 
       it 'has no effect' do
         store.delete(host)
-        file.read.should == contents
+        read.should == contents
       end
     end
   end
@@ -143,7 +166,7 @@ describe Ghost::Store::HostsFileStore do
 
       it 'has no effect' do
         store.empty
-        file.read.should == contents
+        read.should == contents
       end
     end
   end

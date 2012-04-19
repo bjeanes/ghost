@@ -1,5 +1,4 @@
 require 'set'
-require 'stringio'
 
 require 'ghost/host'
 
@@ -9,10 +8,10 @@ module Ghost
       START_TOKEN = "# ghost start"
       END_TOKEN   = "# ghost end"
 
-      attr_accessor :io
+      attr_accessor :path
 
-      def initialize(io)
-        self.io = io
+      def initialize(path = "/etc/hosts")
+        self.path = path
       end
 
       def add(host)
@@ -71,29 +70,36 @@ module Ghost
 
       def sync
         result = nil
-        with_buffer do |buffer|
-          original_lines = read_file(buffer)
 
-          result = yield(buffer)
+        with_file do |file|
+          with_buffer do |buffer|
+            original_lines = read_file(file, buffer)
 
-          if buffer_changed?
-            io.truncate(0)
-            io.puts(original_lines)
-            io.puts(content(buffer))
+            result = yield(buffer)
+
+            if buffer_changed?
+              file.reopen(file.path, 'w')
+              file.truncate(0)
+              file.puts(original_lines)
+              file.puts(content(buffer))
+            end
           end
-
-          io.rewind
         end
 
         result
       end
 
-      def read_file(buffer)
+      def with_file
+        File.open(path, 'r') do |file|
+          yield file
+        end
+      end
+
+      def read_file(file, buffer)
         between_tokens = false
         original_lines = []
 
-        io.rewind
-        io.each do |line|
+        file.each_line do |line|
           if line =~ /^\s*#{START_TOKEN}\s*$/
             between_tokens = true
           elsif line =~ /^\s*#{END_TOKEN}\s*$/
@@ -104,8 +110,6 @@ module Ghost
             original_lines << line
           end
         end
-
-        io.rewind
 
         original_lines
       end
