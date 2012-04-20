@@ -90,11 +90,17 @@ describe Ghost::Cli do
 
   describe "delete" do
     context 'with filtering pattern' do
-      it 'deletes all entries whose hostname matches the pattern'
+      it 'deletes only entries whose hostname matches the pattern' do
+        store.should_receive(:delete).with(/fo*.com?/i)
+        ghost("delete /fo*.com?/")
+      end
     end
 
     context 'without filtering pattern' do
-      it 'deletes the specified hostname'
+      it 'deletes the specified hostname' do
+        store.should_receive(:delete).with('foo.com')
+        ghost("delete foo.com")
+      end
     end
   end
 

@@ -163,26 +163,67 @@ describe Ghost::Store::HostsFileStore do
           127.0.0.1 localhost localhost.localdomain
           # ghost start
           127.0.0.1 google.com
+          127.0.0.2 gooogle.com
           192.168.1.1 github.com
           # ghost end
         EOF
       end
 
       context 'when deleting one of the ghost entries' do
-        let(:host) { OpenStruct.new(:name => "google.com") }
+        context 'using a Ghost::Host to identify host' do
+          let(:host) { Ghost::Host.new("google.com") }
 
-        it 'returns true' do
-          store.delete(host).should be_true
+          it 'returns true' do
+            store.delete(host).should be_true
+          end
+
+          it 'removes the host from the file' do
+            store.delete(host)
+            read.should == <<-EOF.gsub(/^\s+/,'')
+              127.0.0.1 localhost localhost.localdomain
+              # ghost start
+              127.0.0.2 gooogle.com
+              192.168.1.1 github.com
+              # ghost end
+            EOF
+          end
         end
 
-        it 'removes the host from the file' do
-          store.delete(host)
-          read.should == <<-EOF.gsub(/^\s+/,'')
-            127.0.0.1 localhost localhost.localdomain
-            # ghost start
-            192.168.1.1 github.com
-            # ghost end
-          EOF
+        context 'using a regex to identify hosts' do
+          let(:host) { /go*gle\.com/ }
+
+          it 'returns true' do
+            store.delete(host).should be_true
+          end
+
+          it 'removes the host from the file' do
+            store.delete(host)
+            read.should == <<-EOF.gsub(/^\s+/,'')
+              127.0.0.1 localhost localhost.localdomain
+              # ghost start
+              192.168.1.1 github.com
+              # ghost end
+            EOF
+          end
+        end
+
+        context 'using a string to identify host' do
+          let(:host) { "google.com" }
+
+          it 'returns true' do
+            store.delete(host).should be_true
+          end
+
+          it 'removes the host from the file' do
+            store.delete(host)
+            read.should == <<-EOF.gsub(/^\s+/,'')
+              127.0.0.1 localhost localhost.localdomain
+              # ghost start
+              127.0.0.2 gooogle.com
+              192.168.1.1 github.com
+              # ghost end
+            EOF
+          end
         end
       end
 

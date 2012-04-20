@@ -11,7 +11,9 @@ describe Ghost::Host do
     its(:hostname)   { should == 'google.com' }
     its(:ip)         { should == '74.125.225.102'}
     its(:ip_address) { should == '74.125.225.102'}
+  end
 
-    describe "#delete"
+  it 'has a default IP of 127.0.0.1' do
+    Ghost::Host.new('xyz.com').ip.should == '127.0.0.1'
   end
 end

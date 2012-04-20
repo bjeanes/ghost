@@ -39,10 +39,16 @@ module Ghost
         result = false
         sync do |buffer|
           buffer.each do |ip, names|
-            if names.include?(host.name)
-              result = true
-              names.delete(host.name)
-              buffer_changed!
+            names.dup.each do |name|
+              if Regexp === host && host =~ name
+                result = true
+                names.delete(name)
+                buffer_changed!
+              elsif name === host.to_s
+                result = true
+                names.delete(name)
+                buffer_changed!
+              end
             end
           end
         end
