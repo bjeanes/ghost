@@ -107,7 +107,7 @@ describe Ghost::Store::HostsFileStore do
       end
 
       context 'when adding to an existing IP' do
-        before { host.stub(:ip => '192.168.1.1') }
+        before { host.ip = '192.168.1.1' }
 
         it 'adds to existing entry between tokens, listing host names in alphabetical order' do
           store.add(host)
