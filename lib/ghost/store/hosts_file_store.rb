@@ -5,6 +5,8 @@ require 'ghost/tokenized_file'
 
 module Ghost
   module Store
+    # TODO: A lot of this duplicates Resolv::Hosts in Ruby stdlib.
+    #       Can that be modifiied to use tokens in place of this?
     class HostsFileStore
       START_TOKEN = "# ghost start"
       END_TOKEN   = "# ghost end"
