@@ -1,6 +1,7 @@
 require 'set'
 
 require 'ghost/host'
+require 'ghost/tokenized_file'
 
 module Ghost
   module Store
@@ -8,10 +9,11 @@ module Ghost
       START_TOKEN = "# ghost start"
       END_TOKEN   = "# ghost end"
 
-      attr_accessor :path
+      attr_accessor :path, :file
 
       def initialize(path = "/etc/hosts")
         self.path = path
+        self.file = Ghost::TokenizedFile.new(path, "# ghost start", "# ghost end")
       end
 
       def add(host)
@@ -83,61 +85,28 @@ module Ghost
         yield(Hash.new { |hash, key| hash[key] = SortedSet.new })
       end
 
-      def parse_into_buffer(line, buffer)
-        ip, hosts = *line.scan(/^\s*([^\s]+)\s+([^#]*)/).first
+      def parse_into_buffer(lines, buffer)
+        lines.split($/).each do |line|
+          ip, hosts = *line.scan(/^\s*([^\s]+)\s+([^#]*)/).first
 
-        return unless ip and hosts
+          return unless ip and hosts
 
-        hosts.split(/\s+/).each do |host|
-          buffer[ip] << host
+          hosts.split(/\s+/).each do |host|
+            buffer[ip] << host
+          end
         end
       end
 
       def sync
         result = nil
 
-        with_file do |file|
-          with_buffer do |buffer|
-            original_lines = read_file(file, buffer)
-
-            result = yield(buffer)
-
-            if buffer_changed?
-              file.reopen(file.path, 'w')
-              file.truncate(0)
-              file.puts(original_lines)
-              file.puts(content(buffer))
-            end
-          end
+        with_buffer do |buffer|
+          parse_into_buffer(file.read, buffer)
+          result = yield(buffer)
+          file.write(content(buffer)) if buffer_changed?
         end
 
         result
-      end
-
-      def with_file
-        # FIXME: Add exclusive lock on file?
-        File.open(path, 'r') do |file|
-          yield file
-        end
-      end
-
-      def read_file(file, buffer)
-        between_tokens = false
-        original_lines = []
-
-        file.each_line do |line|
-          if line =~ /^\s*#{START_TOKEN}\s*$/
-            between_tokens = true
-          elsif line =~ /^\s*#{END_TOKEN}\s*$/
-            between_tokens = false
-          elsif between_tokens
-            parse_into_buffer(line, buffer)
-          else
-            original_lines << line
-          end
-        end
-
-        original_lines
       end
 
       def content(buffer)
@@ -148,11 +117,7 @@ module Ghost
           end
         end
 
-        <<-EOS.gsub(/^\s+/, '')
-          #{START_TOKEN}
-          #{lines.compact.join($/)}
-          #{END_TOKEN}
-        EOS
+        lines.compact.join($/)
       end
     end
   end

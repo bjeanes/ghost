@@ -310,8 +310,6 @@ describe Ghost::Store::HostsFileStore do
           store.empty
           read.should == <<-EOF.gsub(/^\s+/,'')
             127.0.0.1 localhost localhost.localdomain
-            # ghost start
-            # ghost end
           EOF
         end
       end
