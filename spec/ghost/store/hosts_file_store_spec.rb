@@ -156,6 +156,49 @@ describe Ghost::Store::HostsFileStore do
         read.should == contents
       end
     end
+
+    context 'with existing ghost-managed hosts in the file' do
+      let(:contents) do
+        <<-EOF.gsub(/^\s+/,'')
+          127.0.0.1 localhost localhost.localdomain
+          # ghost start
+          127.0.0.1 google.com
+          192.168.1.1 github.com
+          # ghost end
+        EOF
+      end
+
+      context 'when deleting one of the ghost entries' do
+        let(:host) { OpenStruct.new(:name => "google.com") }
+
+        it 'returns true' do
+          store.delete(host).should be_true
+        end
+
+        it 'removes the host from the file' do
+          store.delete(host)
+          read.should == <<-EOF.gsub(/^\s+/,'')
+            127.0.0.1 localhost localhost.localdomain
+            # ghost start
+            192.168.1.1 github.com
+            # ghost end
+          EOF
+        end
+      end
+
+      context 'when trying to delete a non-ghost entry' do
+        let(:host) { OpenStruct.new(:name => "localhost") }
+
+        it 'returns false' do
+          store.delete(host).should be_false
+        end
+
+        it 'has no effect' do
+          store.delete(host)
+          read.should == contents
+        end
+      end
+    end
   end
 
   describe "#empty" do

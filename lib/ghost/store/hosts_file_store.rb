@@ -36,7 +36,17 @@ module Ghost
       end
 
       def delete(host)
-        false
+        result = false
+        sync do |buffer|
+          buffer.each do |ip, names|
+            if names.include?(host.name)
+              result = true
+              names.delete(host.name)
+              buffer_changed!
+            end
+          end
+        end
+        result
       end
 
       def empty
@@ -117,11 +127,15 @@ module Ghost
 
       def content(buffer)
         ips   = buffer.keys.sort
-        lines = ips.map { |ip| "#{ip} #{buffer[ip].to_a.join(" ")}" }
+        lines = ips.map do |ip|
+          unless (hosts = buffer[ip]).empty?
+            "#{ip} #{buffer[ip].to_a.join(" ")}"
+          end
+        end
 
         <<-EOS.gsub(/^\s+/, '')
           #{START_TOKEN}
-          #{lines.join($/)}
+          #{lines.compact.join($/)}
           #{END_TOKEN}
         EOS
       end
