@@ -5,6 +5,10 @@ module Ghost
     alias :hostname :name
     alias :ip_address :ip
 
+    def initialize(host, ip = "127.0.0.1")
+      super(host, ip)
+    end
+
     def <=>(host)
       if ip == host.ip
         name <=> host.name

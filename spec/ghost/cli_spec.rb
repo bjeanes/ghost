@@ -28,8 +28,7 @@ describe Ghost::Cli do
 
   describe "add" do
     context "with a local hostname" do
-      before     { Ghost::Host.stub(:new).with("my-app.local").and_return(host) }
-      let(:host) { stub(:name => "my-app.local", :ip => "127.0.0.1") }
+      let(:host) { Ghost::Host.new("my-app.local") }
 
       it "adds the host pointing to 127.0.0.1" do
         store.should_receive(:add).with(host)
@@ -46,8 +45,7 @@ describe Ghost::Cli do
       end
 
       context "and an IP address" do
-        before     { Ghost::Host.stub(:new).with("my-app.local", "192.168.1.1").and_return(host) }
-        let(:host) { stub(:name => "my-app.local", :ip => "192.168.1.1") }
+        let(:host) { Ghost::Host.new("my-app.local", "192.168.1.1") }
 
         it "adds the host pointing to the IP address" do
           store.should_receive(:add).with(host)
