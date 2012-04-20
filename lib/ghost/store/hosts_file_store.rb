@@ -50,7 +50,15 @@ module Ghost
       end
 
       def empty
-        false
+        result = false
+        sync do |buffer|
+          unless buffer.empty?
+            result = true
+            buffer.replace({})
+            buffer_changed!
+          end
+        end
+        result
       end
 
       private # TODO: Add buffer management code to new class

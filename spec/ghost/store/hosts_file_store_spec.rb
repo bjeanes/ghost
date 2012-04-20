@@ -212,5 +212,32 @@ describe Ghost::Store::HostsFileStore do
         read.should == contents
       end
     end
+
+    context 'with existing ghost-managed hosts in the file' do
+      let(:contents) do
+        <<-EOF.gsub(/^\s+/,'')
+          127.0.0.1 localhost localhost.localdomain
+          # ghost start
+          127.0.0.1 google.com
+          192.168.1.1 github.com
+          # ghost end
+        EOF
+      end
+
+      context 'when deleting one of the ghost entries' do
+        it 'returns true' do
+          store.empty.should be_true
+        end
+
+        it 'removes the host from the file' do
+          store.empty
+          read.should == <<-EOF.gsub(/^\s+/,'')
+            127.0.0.1 localhost localhost.localdomain
+            # ghost start
+            # ghost end
+          EOF
+        end
+      end
+    end
   end
 end
