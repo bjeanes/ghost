@@ -1,7 +1,7 @@
 require File.expand_path("#{File.dirname(__FILE__)}/../../spec_helper")
 require 'ghost/store/hosts_file_store'
 
-require 'tempfile'
+require 'tmpdir'
 require 'ostruct'
 
 describe Ghost::Store::HostsFileStore do
@@ -24,7 +24,7 @@ describe Ghost::Store::HostsFileStore do
 
   subject { store }
 
-  let(:file_path) { Tempfile.new("etc_hosts").tap { |f| f.close }.path }
+  let(:file_path) { File.join(Dir.tmpdir, "etc_hosts.#{Process.pid}.#{rand(9999)}") }
   let(:store)     { described_class.new(file_path) }
   let(:contents) do
     <<-EOF.gsub(/^\s+/,'')
