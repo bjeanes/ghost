@@ -29,6 +29,7 @@ task :gemspec do
     s.has_rdoc          = false
 
     s.add_development_dependency "rspec", "2.9.0"
+    s.add_development_dependency "rake", "0.9.2.2"
   end
 
   File.open("ghost.gemspec", "w") do |file|
