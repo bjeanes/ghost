@@ -171,21 +171,37 @@ describe Ghost::Store::HostsFileStore do
 
       context 'when deleting one of the ghost entries' do
         context 'using a Ghost::Host to identify host' do
-          let(:host) { Ghost::Host.new("google.com") }
 
-          it 'returns true' do
-            store.delete(host).should == [Ghost::Host.new('google.com', '127.0.0.1')]
+          context 'and the IP does not match an entry' do
+            let(:host) { Ghost::Host.new("google.com", "127.0.0.2") }
+
+            it 'returns empty array' do
+              store.delete(host).should == []
+            end
+
+            it 'has no effect' do
+              store.delete(host)
+              read.should == contents
+            end
           end
 
-          it 'removes the host from the file' do
-            store.delete(host)
-            read.should == <<-EOF.gsub(/^\s+/,'')
-              127.0.0.1 localhost localhost.localdomain
-              # ghost start
-              127.0.0.2 gooogle.com
-              192.168.1.1 github.com
-              # ghost end
-            EOF
+          context 'and the IP matches an entry' do
+            let(:host) { Ghost::Host.new("google.com", "127.0.0.1") }
+
+            it 'returns array of removed hosts' do
+              store.delete(host).should == [Ghost::Host.new('google.com', '127.0.0.1')]
+            end
+
+            it 'removes the host from the file' do
+              store.delete(host)
+              read.should == <<-EOF.gsub(/^\s+/,'')
+                127.0.0.1 localhost localhost.localdomain
+                # ghost start
+                127.0.0.2 gooogle.com
+                192.168.1.1 github.com
+                # ghost end
+              EOF
+            end
           end
         end
 
