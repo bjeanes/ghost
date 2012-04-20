@@ -1,5 +1,5 @@
 Ghost::Cli.task :list do
-  def perform(*)
+  def perform
     hosts = Ghost.store.all
 
     pad = hosts.map {|h| h.name.length }.max
