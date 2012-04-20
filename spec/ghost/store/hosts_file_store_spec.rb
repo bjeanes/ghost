@@ -147,8 +147,8 @@ describe Ghost::Store::HostsFileStore do
     context 'with no ghost-managed hosts in the file' do
       let(:host) { OpenStruct.new(:name => "localhost", :ip => "127.0.0.1") }
 
-      it 'returns false' do
-        store.delete(host).should be_false
+      it 'returns empty array' do
+        store.delete(host).should == []
       end
 
       it 'has no effect' do
@@ -174,7 +174,7 @@ describe Ghost::Store::HostsFileStore do
           let(:host) { Ghost::Host.new("google.com") }
 
           it 'returns true' do
-            store.delete(host).should be_true
+            store.delete(host).should == [Ghost::Host.new('google.com', '127.0.0.1')]
           end
 
           it 'removes the host from the file' do
@@ -192,8 +192,11 @@ describe Ghost::Store::HostsFileStore do
         context 'using a regex to identify hosts' do
           let(:host) { /go*gle\.com/ }
 
-          it 'returns true' do
-            store.delete(host).should be_true
+          it 'returns array of removed hosts' do
+            store.delete(host).should == [
+              Ghost::Host.new('google.com',  '127.0.0.1'),
+              Ghost::Host.new('gooogle.com', '127.0.0.2')
+            ]
           end
 
           it 'removes the host from the file' do
@@ -210,8 +213,8 @@ describe Ghost::Store::HostsFileStore do
         context 'using a string to identify host' do
           let(:host) { "google.com" }
 
-          it 'returns true' do
-            store.delete(host).should be_true
+          it 'returns array of removed hosts' do
+            store.delete(host).should == [Ghost::Host.new('google.com', '127.0.0.1')]
           end
 
           it 'removes the host from the file' do
@@ -231,7 +234,7 @@ describe Ghost::Store::HostsFileStore do
         let(:host) { OpenStruct.new(:name => "localhost") }
 
         it 'returns false' do
-          store.delete(host).should be_false
+          store.delete(host).should == []
         end
 
         it 'has no effect' do

@@ -24,7 +24,7 @@ module Ghost
       end
 
       def all
-        result = []
+        result = SortedSet.new
         sync do |buffer|
           buffer.each do |ip, hosts|
             hosts.each do |host|
@@ -32,27 +32,23 @@ module Ghost
             end
           end
         end
-        result.sort
+        result.to_a
       end
 
       def delete(host)
-        result = false
+        result = SortedSet.new
         sync do |buffer|
           buffer.each do |ip, names|
             names.dup.each do |name|
-              if Regexp === host && host =~ name
-                result = true
-                names.delete(name)
-                buffer_changed!
-              elsif name === host.to_s
-                result = true
-                names.delete(name)
-                buffer_changed!
-              end
+              next unless (Regexp === host && host =~ name) || name === host.to_s
+
+              result << Ghost::Host.new(name, ip)
+              names.delete(name)
+              buffer_changed!
             end
           end
         end
-        result
+        result.to_a
       end
 
       def empty
