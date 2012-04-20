@@ -16,7 +16,7 @@ task :gemspec do
     s.name              = 'ghost'
     s.version           = Ghost::VERSION
     s.summary           = "Allows you to create, list, and modify local hostnames"
-    s.description       = s.summary
+    s.description       = "#{s.summary} on POSIX systems (e.g. Mac OS X and Linux) and Windows"
     s.homepage          = "http://github.com/bjeanes/ghost"
     s.rubyforge_project = 'ghost'
 

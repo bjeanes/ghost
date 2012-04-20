@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
   s.authors = ["Bodaniel Jeanes"]
   s.date = "2012-04-19"
-  s.description = "Allows you to create, list, and modify local hostnames"
+  s.description = "Allows you to create, list, and modify local hostnames on POSIX systems (e.g. Mac OS X and Linux) and Windows"
   s.email = "me@bjeanes.com"
   s.executables = ["ghost"]
   s.files = ["LICENSE", "README.md", "bin/ghost", "lib/ghost", "lib/ghost/cli", "lib/ghost/cli/add.rb", "lib/ghost/cli/task", "lib/ghost/cli/task/add.rb", "lib/ghost/cli/task/empty.rb", "lib/ghost/cli/task/export.rb", "lib/ghost/cli/task/import.rb", "lib/ghost/cli/task/list.rb", "lib/ghost/cli/task.rb", "lib/ghost/cli.rb", "lib/ghost/host.rb", "lib/ghost/store", "lib/ghost/store/dscl_store.rb", "lib/ghost/store/hosts_file_store.rb", "lib/ghost/store.rb", "lib/ghost/version.rb", "lib/ghost.rb", "spec/ghost", "spec/ghost/cli_spec.rb", "spec/ghost/host_spec.rb", "spec/ghost/store", "spec/ghost/store/dscl_store_spec.rb", "spec/ghost/store/hosts_file_store_spec.rb", "spec/ghost/store_spec.rb", "spec/spec_helper.rb"]
