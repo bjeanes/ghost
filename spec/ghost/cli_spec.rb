@@ -122,12 +122,37 @@ describe Ghost::Cli do
           Listing 2 host(s):
             gist.github.com -> 10.0.0.1
                  google.com -> 192.168.1.10
-        ".gsub(/^\s{10}/,'').strip.chomp
+          ".gsub(/^\s{10}/,'').strip.chomp
       end
     end
 
     context "with a filtering parameter" do
-      it "outputs entries whose hostname or IP match the filter"
+      before do
+        store.empty
+        store.add Ghost::Host.new("google.com", "10.0.0.1")
+        store.add Ghost::Host.new("google.co.uk", "192.168.1.10")
+        store.add Ghost::Host.new("gmail.com")
+      end
+
+      context 'that is a regex' do
+        it "outputs entries whose hostname or IP match the filter" do
+          ghost("list /\.com$/").should == %"
+            Listing 2 host(s):
+              google.com -> 10.0.0.1
+               gmail.com -> 127.0.0.1
+            ".gsub(/^\s{12}/,'').strip.chomp
+        end
+      end
+
+      context 'that is a string' do
+        it "outputs entries whose hostname or IP match the filter" do
+          ghost("list google").should == %"
+            Listing 2 host(s):
+                google.com -> 10.0.0.1
+              google.co.uk -> 192.168.1.10
+            ".gsub(/^\s{12}/,'').strip.chomp
+        end
+      end
     end
   end
 
@@ -135,6 +160,7 @@ describe Ghost::Cli do
     before do
       store.add(Ghost::Host.new("xyz", "127.0.0.1"))
     end
+
     it 'empties the list of hosts' do
       ghost("empty")
       store.all.should be_empty

@@ -75,10 +75,27 @@ describe Ghost::Store::HostsFileStore do
     end
   end
 
-  describe "#find"
+  describe "#find" do
+    let(:contents) do
+      <<-EOF.gsub(/^\s+/,'')
+      # ghost start
+      1.2.3.4 bjeanes.com
+      2.3.4.5 my-app.com subdomain.my-app.com
+      # ghost end
+      EOF
+    end
+
+    it "finds hosts matching a regex" do
+      store.find(/.*/).should == store.all
+      store.find(/my-app\.com$/i).should == [
+        Ghost::Host.new('my-app.com', '2.3.4.5'),
+        Ghost::Host.new('subdomain.my-app.com', '2.3.4.5')
+      ]
+    end
+  end
 
   describe "#add" do
-    let(:host) { OpenStruct.new(:name => "google.com", :ip => "127.0.0.1") }
+    let(:host) { Ghost::Host.new("google.com", "127.0.0.1") }
 
     context 'with no ghost-managed hosts in the file' do
       it 'returns true' do

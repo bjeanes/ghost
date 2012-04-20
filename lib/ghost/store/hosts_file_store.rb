@@ -35,6 +35,10 @@ module Ghost
         result.to_a
       end
 
+      def find(filter)
+        all.select { |host| host.name =~ filter }
+      end
+
       def delete(host)
         result = SortedSet.new
         sync do |buffer|
