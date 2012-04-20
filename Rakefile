@@ -36,3 +36,23 @@ task :gemspec do
     file.puts spec.to_ruby
   end
 end
+
+task :default => [:spec, :gem]
+
+task :spec do
+  puts "Running specs\n\n"
+  unless system("bundle exec rspec spec")
+    abort "Specs failed!"
+  end
+end
+
+task :gem => :gemspec do
+  puts "Building gem to pkg/\n\n"
+
+  if system("gem build ghost.gemspec")
+    FileUtils.mkdir_p("pkg")
+    FileUtils.mv("ghost-#{Ghost::VERSION}.gem", "pkg")
+  else
+    abort "Building gem failed!"
+  end
+end
