@@ -70,7 +70,7 @@ describe Ghost::Cli do
 
         it "adds the host pointing to the IP address" do
           ghost("add my-app.local google.com")
-          store.all.should include(host)
+          store.all.should == [host]
         end
 
         it "outputs a summary of the operation" do

@@ -45,7 +45,7 @@ module Ghost
         file.each_line do |line|
           if line =~ /^#{start_token}\s*$/
             between_tokens = true
-          elsif line =~ /^*#{end_token}\s*$/
+          elsif line =~ /^#{end_token}\s*$/
             between_tokens = false
           elsif between_tokens
             lines << line

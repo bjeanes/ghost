@@ -95,7 +95,7 @@ describe Ghost::TokenizedFile do
 
       context "with non-empty tokens" do
         before do
-          file.write "#{start_token}\nfoo#{end_token}\nxyz"
+          file.write "#{start_token}\nfoo\n#{end_token}\nxyz"
           file.flush
           file.rewind
         end
