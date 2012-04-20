@@ -90,6 +90,7 @@ module Ghost
       end
 
       def with_file
+        # FIXME: Add exclusive lock on file?
         File.open(path, 'r') do |file|
           yield file
         end

@@ -3,7 +3,8 @@ class << Ghost
 end
 
 require 'ghost/store/hosts_file_store'
-require 'ghost/store/dscl_store' # TODO: only load on OS X
-
 Ghost.store = Ghost::Store::HostsFileStore.new
+
+# TODO: only load on OS X and make it default when compatible
+require 'ghost/store/dscl_store'
 
