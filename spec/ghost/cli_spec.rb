@@ -1,7 +1,9 @@
 require File.expand_path("#{File.dirname(__FILE__)}/../spec_helper.rb")
 require 'ghost/cli'
 
+require 'fileutils'
 require 'tempfile'
+require 'tmpdir'
 
 describe Ghost::Cli do
   def ghost(args)
@@ -14,8 +16,13 @@ describe Ghost::Cli do
     out.read.chomp
   end
 
-  before { Ghost.store = store }
-  let(:store) { mock }
+  let(:store_path) { File.join(Dir.tmpdir, "etc_hosts.#{Process.pid}.#{rand(9999)}") }
+  let(:store)      { Ghost::Store::HostsFileStore.new(store_path) }
+
+  before do
+    FileUtils.touch(store_path)
+    Ghost.store = store
+  end
 
   describe "environment configuration" # via GHOST_OPTS (see OptionParser#environment)
 
@@ -31,12 +38,11 @@ describe Ghost::Cli do
       let(:host) { Ghost::Host.new("my-app.local") }
 
       it "adds the host pointing to 127.0.0.1" do
-        store.should_receive(:add).with(host)
         ghost("add my-app.local")
+        store.all.should include(Ghost::Host.new("my-app.local", "127.0.0.1"))
       end
 
       it "outputs a summary of the operation" do
-        store.stub(:add)
         ghost("add my-app.local").should == "[Adding] my-app.local -> 127.0.0.1"
       end
 
@@ -48,28 +54,28 @@ describe Ghost::Cli do
         let(:host) { Ghost::Host.new("my-app.local", "192.168.1.1") }
 
         it "adds the host pointing to the IP address" do
-          store.should_receive(:add).with(host)
           ghost("add my-app.local 192.168.1.1")
+          store.all.should include(Ghost::Host.new("my-app.local", "192.168.1.1"))
         end
 
         it "outputs a summary of the operation" do
-          store.stub(:add)
           ghost("add my-app.local 192.168.1.1").should == "[Adding] my-app.local -> 192.168.1.1"
         end
       end
 
       context "and a remote hostname" do
-        before     { Ghost::Host.stub(:new).with("my-app.local", "google.com").and_return(host) }
+        # TODO: replace this stub once DNS resolution works
+        before     { Ghost::Host.stub(:new).with("my-app.local", anything).and_return(host) }
         let(:host) { stub(:name => "my-app.local", :ip => "74.125.225.99") }
 
         it "adds the host pointing to the IP address" do
-          store.should_receive(:add).with(host)
           ghost("add my-app.local google.com")
+          store.all.should include(host)
         end
 
         it "outputs a summary of the operation" do
-          store.stub(:add)
-          ghost("add my-app.local google.com").should == "[Adding] my-app.local -> 74.125.225.99"
+          ghost("add my-app.local google.com").should ==
+            "[Adding] my-app.local -> 74.125.225.99"
         end
 
         context "when the remote hostname can not be resolved" do
@@ -106,10 +112,8 @@ describe Ghost::Cli do
 
   describe "list" do
     before do
-      store.stub(:all => [
-        Ghost::Host.new("gist.github.com", "10.0.0.1"),
-        Ghost::Host.new("google.com", "192.168.1.10")
-      ])
+      store.add Ghost::Host.new("gist.github.com", "10.0.0.1")
+      store.add Ghost::Host.new("google.com", "192.168.1.10")
     end
 
     context "with no filtering parameter" do
@@ -128,23 +132,23 @@ describe Ghost::Cli do
   end
 
   describe "empty" do
+    before do
+      store.add(Ghost::Host.new("xyz", "127.0.0.1"))
+    end
     it 'empties the list of hosts' do
-      store.should_receive(:empty)
       ghost("empty")
+      store.all.should be_empty
     end
 
     it 'outputs a summary of the operation' do
-      store.stub(:empty)
       ghost("empty").should == "[Emptying] Done."
     end
   end
 
   describe "export" do
     it "outputs all hosts one-per-line in hosts file format" do
-      store.stub(:all => [
-        Ghost::Host.new("gist.github.com", "10.0.0.1"),
-        Ghost::Host.new("google.com", "192.168.1.10")
-      ])
+      store.add Ghost::Host.new("gist.github.com", "10.0.0.1")
+      store.add Ghost::Host.new("google.com", "192.168.1.10")
 
       ghost("export").should == <<-EOE.gsub(/^\s+/,'').chomp
         10.0.0.1 gist.github.com
@@ -152,6 +156,7 @@ describe Ghost::Cli do
         EOE
     end
   end
+
   describe "import" do
     context "with current export format" do
       let(:import) do
@@ -161,25 +166,22 @@ describe Ghost::Cli do
         EOI
       end
 
-      let(:foo_com) { stub(:name => 'foo.com', :ip => '1.2.3.4') }
-      let(:bar_com) { stub(:name => 'bar.com', :ip => '2.3.4.5') }
+      let(:foo_com) { Ghost::Host.new('foo.com', '1.2.3.4') }
+      let(:bar_com) { Ghost::Host.new('bar.com', '2.3.4.5') }
 
       context 'with no file name'
       context 'with STDIN sudo file name (-)'
 
       context 'with a file name' do
         it 'adds each entry' do
-          Ghost::Host.stub(:new).with(foo_com.name, foo_com.ip).and_return(foo_com)
-          Ghost::Host.stub(:new).with(bar_com.name, bar_com.ip).and_return(bar_com)
-
-          store.should_receive(:add).with(foo_com)
-          store.should_receive(:add).with(bar_com)
-
           file = Tempfile.new('import')
           file.write(import)
           file.close
 
           ghost("import #{file.path}")
+
+          store.all.should include(foo_com)
+          store.all.should include(bar_com)
         end
       end
 
