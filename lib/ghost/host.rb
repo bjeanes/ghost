@@ -1,3 +1,5 @@
+require 'socket'
+
 module Ghost
   class Host < Struct.new(:name, :ip)
     alias :to_s :name
@@ -6,7 +8,7 @@ module Ghost
     alias :ip_address :ip
 
     def initialize(host, ip = "127.0.0.1")
-      super(host, ip)
+      super(host, resolve_ip(ip))
     end
 
     def <=>(host)
@@ -15,6 +17,12 @@ module Ghost
       else
         ip <=> host.ip
       end
+    end
+
+    def resolve_ip(ip_or_hostname)
+      IPSocket.getaddress(ip_or_hostname)
+    rescue SocketError
+      raise Ghost::NotResolvable, "#{ip_or_hostname} is not resolvable."
     end
   end
 end

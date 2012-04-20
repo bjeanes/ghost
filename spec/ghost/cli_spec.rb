@@ -65,12 +65,12 @@ describe Ghost::Cli do
 
       context "and a remote hostname" do
         # TODO: replace this stub once DNS resolution works
-        before     { Ghost::Host.stub(:new).with("my-app.local", anything).and_return(host) }
-        let(:host) { stub(:name => "my-app.local", :ip => "74.125.225.99") }
+        let(:host) { Ghost::Host.new("my-app.local", "google.com") }
+        before { Ghost::Host.any_instance.stub(:resolve_ip => "74.125.225.99") }
 
         it "adds the host pointing to the IP address" do
           ghost("add my-app.local google.com")
-          store.all.should == [host]
+          store.all.should include(host)
         end
 
         it "outputs a summary of the operation" do
@@ -80,6 +80,7 @@ describe Ghost::Cli do
 
         context "when the remote hostname can not be resolved" do
           before { Ghost::Host.stub(:new).and_raise(Ghost::NotResolvable) }
+
           it "outputs an error message"
         end
       end
