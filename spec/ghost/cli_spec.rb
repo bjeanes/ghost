@@ -8,7 +8,7 @@ require 'tmpdir'
 describe Ghost::Cli do
   def ghost(args)
     out = StringIO.new
-    Ghost::Cli.new(args.split(/\s+/), out).parse
+    Ghost::Cli.new(out).parse(args.split(/\s+/))
     out.rewind
     out.read.chomp
   rescue SystemExit

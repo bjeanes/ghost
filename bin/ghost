@@ -2,4 +2,4 @@
 
 require 'ghost/cli'
 
-Ghost::Cli.new(ARGV).parse
+Ghost::Cli.new.parse

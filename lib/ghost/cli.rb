@@ -1,20 +1,19 @@
-require File.expand_path("#{File.dirname(__FILE__)}/../ghost")
+require 'ghost'
 
 require 'optparse'
 require 'optparse/version'
 
 module Ghost
   class Cli
-    attr_accessor :out, :parser, :args
+    attr_accessor :out, :parser
 
-    def initialize(args, out = STDOUT)
-      self.args = args.dup
+    def initialize(out = STDOUT)
       self.out  = out
 
       setup_parser
     end
 
-    def parse
+    def parse(args = ARGV)
       parser.parse! args
 
       arg = args.shift
