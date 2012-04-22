@@ -5,6 +5,7 @@ require 'fileutils'
 require 'tempfile'
 require 'tmpdir'
 
+# TODO: test exit statuses
 describe Ghost::Cli do
   def ghost(args)
     out = StringIO.new
