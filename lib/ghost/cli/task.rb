@@ -20,6 +20,11 @@ module Ghost
       def print(*args)
         out.print(*args)
       end
+
+      def abort(*args)
+        out.puts(*args)
+        exit 1
+      end
     end
 
     def tasks

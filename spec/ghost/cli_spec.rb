@@ -80,9 +80,11 @@ describe Ghost::Cli do
         end
 
         context "when the remote hostname can not be resolved" do
-          before { Ghost::Host.stub(:new).and_raise(Ghost::NotResolvable) }
+          before { Ghost::Host.stub(:new).and_raise(Ghost::Host::NotResolvable) }
 
-          it "outputs an error message"
+          it "outputs an error message" do
+            ghost("add my-app.local google.com").should == "Unable to resolve IP address for target host \"google.com\"."
+          end
         end
       end
     end
