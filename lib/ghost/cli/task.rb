@@ -32,9 +32,9 @@ module Ghost
     end
 
     class << self
-      def task(name, desc = nil, &block)
-        tasks[name] = Class.new(Task, &block)
-        tasks[name]
+      def task(*names, &block)
+        task = Class.new(Task, &block)
+        names.each { |name| tasks[name] = task }
       end
 
       def tasks
