@@ -12,7 +12,7 @@ module Ghost
     end
 
     def read
-      read_capturing { }
+      read_capturing
     end
 
     def write(content)
@@ -50,7 +50,7 @@ module Ghost
           elsif between_tokens
             lines << line
           else
-            yield(line)
+            yield(line) if block_given?
           end
         end
       end
