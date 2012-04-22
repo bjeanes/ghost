@@ -44,8 +44,8 @@ module Ghost
         sync do |buffer|
           buffer.each do |ip, names|
             names.dup.each do |name|
-              next unless (Regexp === host && host =~ name) || name === host.to_s
-              next if Ghost::Host === host && host.ip != ip
+              next unless host.match(name)
+              next if host.respond_to?(:ip) && host.ip != ip
 
               result << Ghost::Host.new(name, ip)
               names.delete(name)

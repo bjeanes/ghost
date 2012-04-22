@@ -19,6 +19,10 @@ module Ghost
       end
     end
 
+    def match(name)
+      host.match(name)
+    end
+
     def resolve_ip(ip_or_hostname)
       IPSocket.getaddress(ip_or_hostname)
     rescue SocketError

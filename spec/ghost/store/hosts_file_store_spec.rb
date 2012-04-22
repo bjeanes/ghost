@@ -2,7 +2,6 @@ require File.expand_path("#{File.dirname(__FILE__)}/../../spec_helper")
 require 'ghost/store/hosts_file_store'
 
 require 'tmpdir'
-require 'ostruct'
 
 describe Ghost::Store::HostsFileStore do
   def write(content)
@@ -162,7 +161,7 @@ describe Ghost::Store::HostsFileStore do
 
   describe "#delete" do
     context 'with no ghost-managed hosts in the file' do
-      let(:host) { OpenStruct.new(:name => "localhost", :ip => "127.0.0.1") }
+      let(:host) { Ghost::Host.new("localhost", "127.0.0.1") }
 
       it 'returns empty array' do
         store.delete(host).should == []
@@ -264,7 +263,7 @@ describe Ghost::Store::HostsFileStore do
       end
 
       context 'when trying to delete a non-ghost entry' do
-        let(:host) { OpenStruct.new(:name => "localhost") }
+        let(:host) { Ghost::Host.new("localhost") }
 
         it 'returns false' do
           store.delete(host).should == []
