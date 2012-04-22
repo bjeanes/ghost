@@ -28,15 +28,11 @@ module Ghost
       end
 
       def all
-        result = SortedSet.new
         sync do |buffer|
-          buffer.each do |ip, hosts|
-            hosts.each do |host|
-              result << Ghost::Host.new(host, ip)
-            end
-          end
+          buffer.map do |ip, hosts|
+            hosts.map { |h| Ghost::Host.new(h, ip) }
+          end.flatten.sort
         end
-        result.to_a
       end
 
       def find(filter)
