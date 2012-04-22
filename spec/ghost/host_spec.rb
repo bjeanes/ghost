@@ -16,4 +16,21 @@ describe Ghost::Host do
   it 'has a default IP of 127.0.0.1' do
     Ghost::Host.new('xyz.com').ip.should == '127.0.0.1'
   end
+
+  describe 'equality' do
+    it 'is equal to a host with the same hostname and IP' do
+      Ghost::Host.new('google.com', '123.123.123.123').should ==
+        Ghost::Host.new('google.com', '123.123.123.123')
+    end
+
+    it 'is not equal to a host with a different host name' do
+      Ghost::Host.new('google.com', '123.123.123.123').should_not ==
+        Ghost::Host.new('gmail.com', '123.123.123.123')
+    end
+
+    it 'is not equal to a host with a different IP' do
+      Ghost::Host.new('google.com', '123.123.123.123').should_not ==
+        Ghost::Host.new('google.com', '222.222.222.222')
+    end
+  end
 end
