@@ -197,7 +197,7 @@ describe Ghost::Cli do
       let(:bar_com) { Ghost::Host.new('bar.com', '2.3.4.5') }
 
       context 'with no file name'
-      context 'with STDIN sudo file name (-)'
+      context 'with STDIN pseudo file name (-)'
 
       context 'with a file name' do
         it 'adds each entry' do
