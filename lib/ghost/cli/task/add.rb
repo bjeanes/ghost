@@ -12,7 +12,7 @@ Ghost::Cli.task :add do
     <<-EOF.unindent
     Usage: ghost add <local host name> [<remote host name>|<IP address>]
 
-    #{desc}
+    #{desc}.
 
     If a second parameter is not provided, it defaults to 127.0.0.1
 

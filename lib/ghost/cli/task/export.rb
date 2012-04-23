@@ -10,7 +10,9 @@ Ghost::Cli.task :export do
     <<-EOF.unindent
     Usage: ghost export
 
-    #{desc}. The export will be printed to standard out.
+    #{desc}.
+
+    The export will be printed to standard out.
     EOF
   end
 end

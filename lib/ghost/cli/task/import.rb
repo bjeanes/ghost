@@ -15,9 +15,11 @@ Ghost::Cli.task :import do
     <<-EOF.unindent
     Usage: ghost import file1 [file2 [file3 ...]]
 
-    #{desc}. Each file provided will be read in as an import
-    file. The behavior for duplicate or conflicting entries
-    is not currently defined.
+    #{desc}.
+
+    Each file provided will be read in as an import file. The
+    behavior for duplicate or conflicting entries is not currently
+    defined.
     EOF
   end
 end

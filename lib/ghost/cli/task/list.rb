@@ -15,7 +15,7 @@ Ghost::Cli.task :list do
     <<-EOF.unindent
     Usage: ghost list [<regex>]
 
-    #{desc}
+    #{desc}.
 
     If no regular expression is provided, a summary of all hosts is
     shown. If a regular expression is provided, only hosts whose

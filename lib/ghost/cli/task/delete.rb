@@ -9,7 +9,7 @@ Ghost::Cli.task :delete, :rm, :del, :remove do
     <<-EOF.unindent
     Usage: ghost delete <host name|regex>
 
-    #{desc}
+    #{desc}.
 
     The delete task accepts either a literal host name, or a regular
     expression, notated with surrounding forward slashes (/). If a
