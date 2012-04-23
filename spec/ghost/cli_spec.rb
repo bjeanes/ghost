@@ -12,10 +12,10 @@ describe Ghost::Cli do
     out = StringIO.new
     Ghost::Cli.new(out).parse(args.split(/\s+/))
     out.rewind
-    out.read.chomp
+    out.read
   rescue SystemExit
     out.rewind
-    out.read.chomp
+    out.read
   end
 
   let(:store_path) { File.join(Dir.tmpdir, "etc_hosts.#{Process.pid}.#{rand(9999)}") }
@@ -28,19 +28,19 @@ describe Ghost::Cli do
 
   describe "help" do
     let(:overview) do
-      """
-      USAGE: ghost <task> [<args>]
+      <<-EOF.unindent
+        USAGE: ghost <task> [<args>]
 
-      The ghost tasks are:
-        add        Add a host
-        delete     Remove a ghost-managed host
-        empty      Clear all ghost-managed hosts
-        export     Export all hosts in /etc/hosts format
-        import     Import hosts in /etc/hosts format
-        list       Show all (or a filtered) list of hosts
+        The ghost tasks are:
+          add        Add a host
+          delete     Remove a ghost-managed host
+          empty      Clear all ghost-managed hosts
+          export     Export all hosts in /etc/hosts format
+          import     Import hosts in /etc/hosts format
+          list       Show all (or a filtered) list of hosts
 
-      See 'ghost help <task>' for more information on a specific task.
-      """.gsub(/^ {6}/,'').strip
+        See 'ghost help <task>' for more information on a specific task.
+      EOF
     end
 
     it 'displays help overview when called with no args' do
@@ -50,14 +50,31 @@ describe Ghost::Cli do
     it 'displays help overview when help task is called with no arguments' do
       ghost("help").should == overview
     end
+
+    describe "add" do
+      specify do
+        ghost("help add").should == <<-EOF.unindent
+          Usage: ghost add <local host name> [<remote host name>|<IP address>]
+
+          Add a host
+
+          If a second parameter is not provided, it defaults to 127.0.0.1
+
+          Examples:
+            ghost add my-localhost          # points to 127.0.0.1
+            ghost add google.dev google.com # points to the IP of google.com
+            ghost add router 192.168.1.1    # points to 192.168.1.1
+          EOF
+      end
+    end
   end
 
   describe "environment configuration" # via GHOST_OPTS (see OptionParser#environment)
 
   describe "--version" do
     it "outputs the gem name and version" do
-      ghost("--version").should == "ghost #{Ghost::VERSION}"
-      ghost("-v").should == "ghost #{Ghost::VERSION}"
+      ghost("--version").should == "ghost #{Ghost::VERSION}\n"
+      ghost("-v").should == "ghost #{Ghost::VERSION}\n"
     end
   end
 
@@ -71,7 +88,7 @@ describe Ghost::Cli do
       end
 
       it "outputs a summary of the operation" do
-        ghost("add my-app.local").should == "[Adding] my-app.local -> 127.0.0.1"
+        ghost("add my-app.local").should == "[Adding] my-app.local -> 127.0.0.1\n"
       end
 
       context "when an entry for that hostname already exists" do
@@ -87,7 +104,7 @@ describe Ghost::Cli do
         end
 
         it "outputs a summary of the operation" do
-          ghost("add my-app.local 192.168.1.1").should == "[Adding] my-app.local -> 192.168.1.1"
+          ghost("add my-app.local 192.168.1.1").should == "[Adding] my-app.local -> 192.168.1.1\n"
         end
       end
 
@@ -103,14 +120,14 @@ describe Ghost::Cli do
 
         it "outputs a summary of the operation" do
           ghost("add my-app.local google.com").should ==
-            "[Adding] my-app.local -> 74.125.225.99"
+            "[Adding] my-app.local -> 74.125.225.99\n"
         end
 
         context "when the remote hostname can not be resolved" do
           before { Ghost::Host.stub(:new).and_raise(Ghost::Host::NotResolvable) }
 
           it "outputs an error message" do
-            ghost("add my-app.local google.com").should == "Unable to resolve IP address for target host \"google.com\"."
+            ghost("add my-app.local google.com").should == "Unable to resolve IP address for target host \"google.com\".\n"
           end
         end
       end
@@ -149,11 +166,11 @@ describe Ghost::Cli do
 
     context "with no filtering parameter" do
       it "outputs all hostnames" do
-        ghost("list").should == %"
+        ghost("list").should == <<-EOF.unindent
           Listing 2 host(s):
             gist.github.com -> 10.0.0.1
                  google.com -> 192.168.1.10
-          ".gsub(/^\s{10}/,'').strip.chomp
+          EOF
       end
     end
 
@@ -167,21 +184,21 @@ describe Ghost::Cli do
 
       context 'that is a regex' do
         it "outputs entries whose hostname or IP match the filter" do
-          ghost("list /\.com$/").should == %"
+          ghost("list /\.com$/").should == <<-EOF.unindent
             Listing 2 host(s):
               google.com -> 10.0.0.1
                gmail.com -> 127.0.0.1
-            ".gsub(/^\s{12}/,'').strip.chomp
+            EOF
         end
       end
 
       context 'that is a string' do
         it "outputs entries whose hostname or IP match the filter" do
-          ghost("list google").should == %"
+          ghost("list google").should == <<-EOF.unindent
             Listing 2 host(s):
                 google.com -> 10.0.0.1
               google.co.uk -> 192.168.1.10
-            ".gsub(/^\s{12}/,'').strip.chomp
+            EOF
         end
       end
     end
@@ -198,7 +215,7 @@ describe Ghost::Cli do
     end
 
     it 'outputs a summary of the operation' do
-      ghost("empty").should == "[Emptying] Done."
+      ghost("empty").should == "[Emptying] Done.\n"
     end
   end
 
@@ -207,7 +224,7 @@ describe Ghost::Cli do
       store.add Ghost::Host.new("gist.github.com", "10.0.0.1")
       store.add Ghost::Host.new("google.com", "192.168.1.10")
 
-      ghost("export").should == <<-EOE.gsub(/^\s+/,'').chomp
+      ghost("export").should == <<-EOE.unindent
         10.0.0.1 gist.github.com
         192.168.1.10 google.com
         EOE
@@ -217,7 +234,7 @@ describe Ghost::Cli do
   describe "import" do
     context "with current export format" do
       let(:import) do
-        <<-EOI.gsub(/^\s+/,'').chomp
+        <<-EOI.unindent
         1.2.3.4 foo.com
         2.3.4.5 bar.com
         EOI
@@ -257,7 +274,7 @@ describe Ghost::Cli do
 
       context 'with multiple hosts per line' do
         let(:import) do
-          <<-EOI.gsub(/^\s+/,'').chomp
+          <<-EOI.unindent
           1.2.3.4 foo.com
           2.3.4.5 bar.com subdomain.bar.com
           EOI

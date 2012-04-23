@@ -1,3 +1,5 @@
+require 'unindent'
+
 module Ghost
   class Cli
     class Task
@@ -11,6 +13,14 @@ module Ghost
             @desc = str
           else
             @desc
+          end
+        end
+
+        def help
+          if block_given?
+            @help = yield.unindent
+          else
+            @help
           end
         end
       end

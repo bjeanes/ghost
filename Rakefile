@@ -28,6 +28,7 @@ task :gemspec do
     s.executables       += %w[ghost]
     s.has_rdoc          = false
 
+    s.add_dependency 'unindent', '1.0'
     s.add_development_dependency "rspec", "2.9.0"
     s.add_development_dependency "rake", "0.9.2.2"
   end
