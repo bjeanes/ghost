@@ -11,6 +11,22 @@ Ghost::Cli.task :list do
     end
   end
 
+  help do
+    <<-EOF.unindent
+    Usage: ghost list [<regex>]
+
+    #{desc}
+
+    If no regular expression is provided, a summary of all hosts is
+    shown. If a regular expression is provided, only hosts whose
+    host names match the regular expression are listed.
+
+    Examples:
+      ghost list                # will list every host name
+      ghost list /^fo+\\.com$/  # will list fo.com, fooooo.com, etc.
+    EOF
+  end
+
   private
 
   def get_hosts(filter)
