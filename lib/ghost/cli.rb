@@ -18,7 +18,7 @@ module Ghost
 
       arg = args.shift.to_s
 
-      if (task = tasks[arg.to_sym])
+      if (task = tasks[arg])
         task.perform(*args)
       else
         raise "No such task"
