@@ -3,6 +3,18 @@ module Ghost
     class Task
       attr_accessor :out
 
+      class << self
+        attr_accessor :name
+
+        def desc(str = nil)
+          if str
+            @desc = str
+          else
+            @desc
+          end
+        end
+      end
+
       def initialize(out)
         self.out = out
       end
@@ -34,6 +46,7 @@ module Ghost
     class << self
       def task(*names, &block)
         task = Class.new(Task, &block)
+        task.name = names.first
         names.each { |name| tasks[name.to_s.to_sym] = task }
       end
 

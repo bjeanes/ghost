@@ -1,4 +1,5 @@
 Ghost::Cli.task :add do
+  desc "Add a host"
   def perform(host, ip = nil)
     host = Ghost::Host.new(*[host, ip].compact)
     Ghost.store.add(host)

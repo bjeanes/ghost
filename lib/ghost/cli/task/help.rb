@@ -1,16 +1,18 @@
 Ghost::Cli.task :help, nil do
   def perform(task=nil)
-    puts """USAGE: ghost <task> [<args>]
+    tasks = Ghost::Cli.tasks.values.uniq
 
-    The ghost tasks are:
-      add        Add a host
-      delete     Remove a ghost-managed host
-      list       Show all (or a filtered) list of hosts
-      import     Import hosts in /etc/hosts format
-      export     Export all hosts in /etc/hosts format
-      empty      Clear all ghost-managed hosts
+    puts "USAGE: ghost <task> [<args>]"
+    puts ""
+    puts "The ghost tasks are:"
 
-    See 'ghost help <task>' for more information on a specific task.
-    """.gsub(/^ {4}/,'').strip
+    size = tasks.map { |t| t.name.length }.max
+    tasks.sort_by(&:name).each do |task|
+      next unless task.desc
+      puts "  #{task.name.to_s.ljust(size + 1)}    #{task.desc}"
+    end
+
+    puts ""
+    puts "See 'ghost help <task>' for more information on a specific task."
   end
 end
