@@ -16,8 +16,7 @@ module Ghost
     def parse(args = ARGV)
       parser.parse! args
 
-      arg = args.shift
-      return unless arg
+      arg = args.shift.to_s
 
       if (task = tasks[arg.to_sym])
         task.perform(*args)
@@ -32,6 +31,7 @@ module Ghost
       self.parser = OptionParser.new do |o|
         o.on_tail '-v', '--version' do
           puts parser.ver
+          exit
         end
       end
 

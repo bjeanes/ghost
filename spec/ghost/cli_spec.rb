@@ -25,6 +25,32 @@ describe Ghost::Cli do
     Ghost.store = store
   end
 
+  describe "help" do
+    let(:overview) do
+      """
+      USAGE: ghost <task> [<args>]
+
+      The ghost tasks are:
+        add        Add a host
+        delete     Remove a ghost-managed host
+        list       Show all (or a filtered) list of hosts
+        import     Import hosts in /etc/hosts format
+        export     Export all hosts in /etc/hosts format
+        empty      Clear all ghost-managed hosts
+
+      See 'ghost help <task>' for more information on a specific task.
+      """.gsub(/^ {6}/,'').strip
+    end
+
+    it 'displays help overview when called with no args' do
+      ghost("").should == overview
+    end
+
+    it 'displays help overview when help task is called with no arguments' do
+      ghost("help").should == overview
+    end
+  end
+
   describe "environment configuration" # via GHOST_OPTS (see OptionParser#environment)
 
   describe "--version" do
