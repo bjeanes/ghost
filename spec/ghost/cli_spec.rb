@@ -62,7 +62,7 @@ describe Ghost::Cli do
         ghost("help add").should == <<-EOF.unindent
           Usage: ghost add <local host name> [<remote host name>|<IP address>]
 
-          Add a host
+          Add a host.
 
           If a second parameter is not provided, it defaults to 127.0.0.1
 
