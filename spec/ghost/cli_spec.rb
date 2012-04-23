@@ -6,6 +6,7 @@ require 'tempfile'
 require 'tmpdir'
 
 # TODO: test exit statuses
+# TODO: split each task into own smaller spec
 describe Ghost::Cli do
   def ghost(args)
     out = StringIO.new
