@@ -21,8 +21,10 @@ module Ghost
       if (task = tasks[arg])
         task.perform(*args)
       else
-        raise "No such task"
+        abort "No such task"
       end
+    rescue Errno::EACCES
+      abort "Insufficient privileges. Try using `sudo` or running as root."
     end
 
     private
@@ -45,6 +47,12 @@ module Ghost
 
     def puts(*args)
       out.puts(*args)
+    end
+
+    # TODO: should output to STDERR
+    def abort(*args)
+      puts *args
+      exit 1
     end
   end
 end

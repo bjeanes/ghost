@@ -26,6 +26,14 @@ describe Ghost::Cli do
     Ghost.store = store
   end
 
+  context 'writable operations with out proper permissions' do
+    it 'outputs a message telling user to escalate permissions' do
+      store.stub(:add).and_raise(Errno::EACCES)
+
+      ghost("add domain.com").should == "Insufficient privileges. Try using `sudo` or running as root.\n"
+    end
+  end
+
   describe "help" do
     let(:overview) do
       <<-EOF.unindent
