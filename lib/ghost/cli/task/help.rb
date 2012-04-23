@@ -1,10 +1,9 @@
 Ghost::Cli.task :help, nil do
-  def perform(task=nil)
-    return overview unless task
+  def perform(name=nil)
+    return overview unless name
 
-    task = tasks_by_name[task]
-    abort "No such task #{task}" unless task
-    abort "No help for task #{task}" unless task.help
+    task = tasks_by_name[name]
+    abort "No help for task '#{name}'" unless task && task.help
 
     puts task.help
   end

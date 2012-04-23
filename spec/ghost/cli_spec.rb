@@ -51,6 +51,12 @@ describe Ghost::Cli do
       ghost("help").should == overview
     end
 
+    context "when no help text for a given topic is available" do
+      it "prints out a message" do
+        ghost("help missing").should == "No help for task 'missing'\n"
+      end
+    end
+
     describe "add" do
       specify do
         ghost("help add").should == <<-EOF.unindent
