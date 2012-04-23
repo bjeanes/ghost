@@ -46,7 +46,7 @@ module Ghost
     class << self
       def task(*names, &block)
         task = Class.new(Task, &block)
-        task.name = names.first
+        task.name = names.first.to_s
         names.each { |name| tasks[name.to_s.to_sym] = task }
       end
 
