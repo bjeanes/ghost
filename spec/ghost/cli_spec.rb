@@ -57,6 +57,9 @@ describe Ghost::Cli do
       end
     end
 
+    # FIXME: these are petty silly tests to have. Find a nice way to check
+    # that documentation is accessible and printable for all meaninful tests
+    # but don't test actual contents...
     describe "add" do
       specify do
         ghost("help add").should == <<-EOF.unindent
