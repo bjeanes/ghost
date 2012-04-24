@@ -19,6 +19,4 @@ describe Ghost::Cli, :type => :cli do
       ghost("-v").should == "ghost #{Ghost::VERSION}\n"
     end
   end
-
-
 end
