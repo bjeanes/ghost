@@ -1,7 +1,11 @@
 module Ghost
   # TODO: make it not necessarily line-based tokenization
-  # TODO: make it delegate or inherit from File to allow it to be a drop-in
-  #       to things expecting a File
+  # TODO: make it delegate or inherit from File/IO/StringIO to allow it to be a
+  #       drop-in to things expecting an IO.
+  #         - Allow consumer to manipulate a real IO, and sync the contents
+  #           into the real file between the tokens?
+  # TODO: make this it's own gem/library. This has nothing to do (specifically)
+  #       with hosts file management
   class TokenizedFile
     attr_accessor :path, :start_token, :end_token
 
