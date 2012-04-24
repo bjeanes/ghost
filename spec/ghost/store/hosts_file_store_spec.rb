@@ -26,7 +26,7 @@ describe Ghost::Store::HostsFileStore do
   let(:file_path) { File.join(Dir.tmpdir, "etc_hosts.#{Process.pid}.#{rand(9999)}") }
   let(:store)     { described_class.new(file_path) }
   let(:contents) do
-    <<-EOF.gsub(/^\s+/,'')
+    <<-EOF.unindent
     127.0.0.1 localhost localhost.localdomain
     EOF
   end
