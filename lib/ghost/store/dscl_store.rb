@@ -1,16 +1,8 @@
 require 'ghost/host'
+require 'set'
 
 module Ghost
   module Store
-    # TODO: How to write these tests without actually
-    #       destroying local hosts or needing sudo?
-    #
-    #       How to run off OS X?
-    #
-    #       Setting expectations for the calling the
-    #       dscl commands is basically just testing
-    #       the implementation instead of the side
-    #       effect. Useless tests?
     class DsclStore
       class Dscl
         class << self
@@ -58,6 +50,17 @@ module Ghost
       end
 
       def delete(host)
+        result = SortedSet.new
+
+        all.each do |existing_host|
+          next unless host.match(existing_host.name)
+          next if host.respond_to?(:ip) && host.ip != existing_host.ip
+
+          Dscl.delete(domain, existing_host.name)
+          result << existing_host
+        end
+
+        result.to_a
       end
 
       def empty

@@ -187,7 +187,6 @@ describe Ghost::Store::HostsFileStore do
 
       context 'when deleting one of the ghost entries' do
         context 'using a Ghost::Host to identify host' do
-
           context 'and the IP does not match an entry' do
             let(:host) { Ghost::Host.new("google.com", "127.0.0.2") }
 
