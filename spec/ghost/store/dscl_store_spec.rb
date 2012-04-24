@@ -54,8 +54,22 @@ describe Ghost::Store::DsclStore do
     end
   end
 
+  describe "#add" do
+    let(:host) { Ghost::Host.new('foo.com', '123.123.123.123') }
+
+    it 'returns true' do
+      store.add(host).should be_true
+    end
+
+    # In order to make this run off OS X and without root, have to use an
+    # expectation... I think?
+    it 'adds the host' do
+      cmd.should_receive(:create).with('localhost', 'foo.com', '123.123.123.123')
+      store.add(host)
+    end
+  end
+
   describe "#delete"
-  describe "#add"
   describe "#delete"
   describe "#empty"
 end

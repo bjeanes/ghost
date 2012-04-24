@@ -40,6 +40,8 @@ module Ghost
       end
 
       def add(host)
+        Dscl.create(domain, host.name, host.ip)
+        true
       end
 
       def all
