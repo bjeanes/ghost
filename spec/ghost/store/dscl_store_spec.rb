@@ -46,7 +46,14 @@ describe Ghost::Store::DsclStore do
     end
   end
 
-  describe "#find"
+  describe "#find" do
+    it 'finds hosts matching a regex' do
+      cmd.stub(:list).and_return([dscl_foo_com, dscl_bar_com])
+      store.find(/.*/).should == store.all
+      store.find(/f/).should == [Ghost::Host.new('foo.com', '123.123.123.123')]
+    end
+  end
+
   describe "#delete"
   describe "#add"
   describe "#delete"

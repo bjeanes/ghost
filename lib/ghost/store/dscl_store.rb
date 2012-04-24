@@ -51,6 +51,10 @@ module Ghost
         end
       end
 
+      def find(regex)
+        all.select { |h| h.name =~ regex }
+      end
+
       def delete(host)
       end
 
