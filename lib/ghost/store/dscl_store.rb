@@ -64,6 +64,7 @@ module Ghost
       end
 
       def empty
+        all.each { |host| Dscl.delete(domain, host.name) }
       end
     end
   end

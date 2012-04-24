@@ -142,5 +142,12 @@ describe Ghost::Store::DsclStore do
     end
   end
 
-  describe "#empty"
+  describe "#empty" do
+    it 'deletes all the entries' do
+      store.stub(:all => [Ghost::Host.new('foo'), Ghost::Host.new('bar')])
+      cmd.should_receive(:delete).with('localhost', 'foo')
+      cmd.should_receive(:delete).with('localhost', 'bar')
+      store.empty
+    end
+  end
 end
