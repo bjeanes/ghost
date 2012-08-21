@@ -9,8 +9,9 @@ require 'rbconfig'
 
 case RbConfig::CONFIG['host_os']
 when /darwin/
-  productVersion = `/usr/bin/sw_vers -productVersion`.strip
-  if productVersion =~ /^10\.7\.[2-9]{1}$/
+  sw_vers = `/usr/bin/sw_vers -productVersion`.strip
+  # use linux-style hosts on Mac OS X Lion and Mountain Lion
+  if sw_vers =~ /^10\.7\.[2-9]$/ or sw_vers =~ /^10\.8(\.[0-9])?$/
     require 'ghost/linux-host'
   else
     require 'ghost/mac-host'
