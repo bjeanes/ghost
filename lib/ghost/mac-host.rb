@@ -22,9 +22,14 @@ module Ghost
             ip = Socket.gethostbyname(ip)[3].bytes.to_a.join('.')
           end
 
-          `#{CreateCmd % [host, ip]}`
-          flush!
-          find_by_host(host)
+          # command returns empty iff success
+          errorMessage = `#{CreateCmd % [host, ip]}`
+          if errorMessage
+            raise RuntimeError, "Ghost failed due to dscl error %s" % errorMessage
+          else                    
+            flush!
+            find_by_host(host)
+          end
         else
           raise Ghost::RecordExists, "Can not overwrite existing record"
         end
