@@ -1,28 +1,59 @@
-require 'rubygems'
-require 'rake/gempackagetask'
-require 'rubygems/specification'
-require 'date'
+$: << File.expand_path(File.join(File.dirname(__FILE__), 'lib'))
 
-Dir['tasks/**/*.rake'].each { |rake| load rake }
+desc "Generate gemspec"
+task :gemspec do
+  require 'rubygems/specification'
+  require 'ghost/version'
+  require 'date'
 
+  spec = Gem::Specification.new do |s|
+    s.specification_version = 3 if s.respond_to? :specification_version=
+    s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
 
-#### MISC TASKS ####
+    s.author            = "Bodaniel Jeanes"
+    s.email             = "me@bjeanes.com"
 
-desc "list tasks"
-task :default do
-  puts `rake -T`
+    s.name              = 'ghost'
+    s.version           = Ghost::VERSION
+    s.summary           = "Allows you to create, list, and modify local hostnames"
+    s.description       = "#{s.summary} on POSIX systems (e.g. Mac OS X and Linux) and Windows"
+    s.homepage          = "http://github.com/bjeanes/ghost"
+    s.rubyforge_project = 'ghost'
+
+    s.date              = Date.today.strftime
+
+    s.files             = %w(LICENSE README.md) + Dir.glob("{bin,lib,spec}/**/*")
+    s.require_paths     = %w[lib]
+    s.test_files        = s.files.select { |path| path =~ /^spec\// }
+    s.executables       += %w[ghost]
+    s.has_rdoc          = false
+
+    s.add_dependency 'unindent', '1.0'
+    s.add_development_dependency "rspec", "2.9.0"
+    s.add_development_dependency "rake", "0.9.2.2"
+  end
+
+  File.open("ghost.gemspec", "w") do |file|
+    file.puts spec.to_ruby
+  end
 end
 
-desc "Outstanding TODO's"
-task :todo do
-  files = ["**/*.{rb,rake}" "bin/*", "README.mkdn"]
+task :default => [:spec, :gem]
 
-  File.open('TODO','w') do |f|
-      FileList[*files].egrep(/TODO|FIXME/) do |file, line, text|
-      output = "#{file}:#{line} - #{text.chomp.gsub(/^\s+|\s+$/ , "")}"
+task :spec do
+  puts "Running specs\n\n"
+  unless system("bundle exec rspec spec")
+    abort "Specs failed!"
+  end
+end
 
-      puts output
-      f.puts output
-    end
+task :gem => :gemspec do
+  puts "Building gem to pkg/\n\n"
+
+  if system("gem build ghost.gemspec")
+    FileUtils.mkdir_p("pkg")
+    FileUtils.mv("ghost-#{Ghost::VERSION}.gem", "pkg")
+  else
+    abort "Building gem failed!"
   end
 end
