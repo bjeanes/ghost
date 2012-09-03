@@ -10,6 +10,10 @@ module Ghost
     class HostsFileStore
       attr_accessor :path, :file
 
+      # TODO: Support windows locations:
+      #   Windows 95/98/Me  c:\windows\hosts
+      #   Windows NT/2000/XP Pro  c:\winnt\system32\drivers\etc\hosts
+      #   Windows XP Home c:\windows\system32\drivers\etc\hosts
       def initialize(path = "/etc/hosts")
         self.path = path
         self.file = Ghost::TokenizedFile.new(path, "# ghost start", "# ghost end")
