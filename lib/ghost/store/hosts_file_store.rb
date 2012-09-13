@@ -8,7 +8,7 @@ module Ghost
     # TODO: A lot of this duplicates Resolv::Hosts in Ruby stdlib.
     #       Can that be modifiied to use tokens in place of this?
     class HostsFileStore
-      attr_accessor :path, :file
+      attr_accessor :path, :file, :strict
 
       # TODO: Support windows locations:
       #   Windows 95/98/Me  c:\windows\hosts
@@ -17,10 +17,21 @@ module Ghost
       def initialize(path = "/etc/hosts")
         self.path = path
         self.file = Ghost::TokenizedFile.new(path, "# ghost start", "# ghost end")
+        self.strict = true
       end
 
       def add(host)
         sync do |buffer|
+          buffer[host.ip] << host.name
+          buffer_changed!
+        end
+
+        true
+      end
+
+      def set(host)
+        sync do |buffer|
+          delete_host host, buffer
           buffer[host.ip] << host.name
           buffer_changed!
         end
@@ -41,17 +52,27 @@ module Ghost
       end
 
       def delete(host)
-        result = SortedSet.new
         sync do |buffer|
-          buffer.each do |ip, names|
-            names.dup.each do |name|
-              next unless host.match(name)
-              next if host.respond_to?(:ip) && host.ip != ip
+          delete_host host, buffer, :strict
+        end
+      end
 
-              result << Ghost::Host.new(name, ip)
-              names.delete(name)
-              buffer_changed!
-            end
+      def purge(host)
+        sync do |buffer|
+          delete_host host, buffer
+        end
+      end
+
+      def delete_host(host, buffer, strict = false)
+        result = SortedSet.new
+        buffer.each do |ip, names|
+          names.each do |name|
+            next unless host.match(name)
+            next if host.respond_to?(:ip) && host.ip != ip && strict
+
+            result << Ghost::Host.new(name, ip)
+            names.delete(name)
+            buffer_changed!
           end
         end
         result.to_a
