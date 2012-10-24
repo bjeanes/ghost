@@ -34,7 +34,10 @@ describe Ghost::Store::HostsFileStore do
   before { write(contents) }
 
   it 'manages the default file of /etc/hosts when no file path is provided' do
-    described_class.new.path.should == "/etc/hosts"
+		previous_hosts_location = Resolv::Hosts::DefaultFileName
+		Resolv::Hosts::DefaultFileName = "hosts_location"
+    described_class.new.path.should == "hosts_location"
+		Resolv::Hosts::DefaultFileName = previous_hosts_location
   end
 
   it 'manages the file at the provided path when given' do
