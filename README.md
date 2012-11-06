@@ -65,6 +65,11 @@ Command
     Listing 1 host(s):
       staging-server.local -> 64.233.167.99
 
+With RVM you need to add `rvmsudo` before the command:
+
+    $ rvmsudo ghost add mydevsite.local
+      [Adding] mydevsite.local -> 127.0.0.1
+
 Library
 -------
 
@@ -76,6 +81,10 @@ Installation
 ============
 
     sudo gem install ghost
+
+If you are using RVM:
+
+    gem install ghost
 
 Contributors
 ============
