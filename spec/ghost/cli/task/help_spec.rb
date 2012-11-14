@@ -14,6 +14,7 @@ describe Ghost::Cli, :type => :cli do
           export     Export all hosts in /etc/hosts format
           import     Import hosts in /etc/hosts format
           list       Show all (or a filtered) list of hosts
+          set        Add a host or modify the IP of an existing host
 
         See 'ghost help <task>' for more information on a specific task.
       EOF
