@@ -279,6 +279,95 @@ describe Ghost::Store::HostsFileStore do
     end
   end
 
+  describe "#set" do
+    let(:host) { Ghost::Host.new("github.com", "127.0.0.1") }
+
+    context 'with existing ghost-managed hosts in the file' do
+      let(:contents) do
+        <<-EOF.gsub(/^\s+/,'')
+          127.0.0.1 localhost localhost.localdomain
+          # ghost start
+          192.168.1.1 github.com
+          192.168.1.2 github.com
+          # ghost end
+        EOF
+      end
+
+      context 'when setting the host to an IP' do
+        it 'replaces all instances of that hostname with a single entry for that IP' do
+          store.set(host)
+          read.should == <<-EOF.gsub(/^\s+/,'')
+            127.0.0.1 localhost localhost.localdomain
+            # ghost start
+            127.0.0.1 github.com
+            # ghost end
+          EOF
+        end
+
+        it 'returns true' do
+          store.set(host).should be_true
+        end
+      end
+    end
+  end
+
+  describe "#purge" do
+    context 'with existing ghost-managed hosts in the file' do
+      let(:contents) do
+        <<-EOF.gsub(/^\s+/,'')
+          127.0.0.1 localhost localhost.localdomain
+          # ghost start
+          127.0.0.1 google.com
+          127.0.0.2 gooogle.com
+          192.168.1.1 github.com
+          # ghost end
+        EOF
+      end
+
+      context 'when purging one of the ghost entries' do
+        context 'using a Ghost::Host to identify host' do
+          context 'and the IP does not match an entry' do
+            let(:host) { Ghost::Host.new("google.com", "127.0.0.2") }
+
+            it 'returns array of removed hosts' do
+              store.purge(host).should == [Ghost::Host.new('google.com', '127.0.0.1')]
+            end
+
+            it 'removes the host from the file' do
+              store.purge(host)
+              read.should == <<-EOF.gsub(/^\s+/,'')
+                127.0.0.1 localhost localhost.localdomain
+                # ghost start
+                127.0.0.2 gooogle.com
+                192.168.1.1 github.com
+                # ghost end
+              EOF
+            end
+          end
+
+          context 'and the IP matches an entry' do
+            let(:host) { Ghost::Host.new("google.com", "127.0.0.1") }
+
+            it 'returns array of removed hosts' do
+              store.purge(host).should == [Ghost::Host.new('google.com', '127.0.0.1')]
+            end
+
+            it 'removes the host from the file' do
+              store.purge(host)
+              read.should == <<-EOF.gsub(/^\s+/,'')
+                127.0.0.1 localhost localhost.localdomain
+                # ghost start
+                127.0.0.2 gooogle.com
+                192.168.1.1 github.com
+                # ghost end
+              EOF
+            end
+          end
+        end
+      end
+    end
+  end
+
   describe "#empty" do
     context 'with no ghost-managed hosts in the file' do
       it 'returns false' do
