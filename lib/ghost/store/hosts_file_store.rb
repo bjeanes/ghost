@@ -67,7 +67,14 @@ module Ghost
         result = SortedSet.new
         buffer.each do |ip, names|
           names.each do |name|
-            next unless host.match(name)
+            if host.kind_of? Host
+              next unless host.name == name
+            elsif host.kind_of? String
+              next unless host == name
+            else
+              next unless host.match(name)
+            end
+
             next if host.respond_to?(:ip) && host.ip != ip && strict
 
             result << Ghost::Host.new(name, ip)
