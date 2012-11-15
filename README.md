@@ -89,20 +89,30 @@ If you are using RVM:
 Contributors
 ============
 
-If this list is ever out of date, you can get full contributor list with `git log --format='%aN (%ae)' | sort -u`
+If this list is ever out of date, you can get full contributor list
+with `git log --format='%aN (%ae)' | sort -u` or from [here](https://github.com/bjeanes/ghost/graphs/contributors).
 
 * [Alkesh Vaghmaria](https://github.com/alkesh)
 * [Andrei Serdeliuc](https://github.com/extraordinaire)
 * [Ben Hoskings](https://github.com/benhoskings)
-* [Bodaniel Jeanes](https://github.com/bjeanes)
-* [Courtois Simon](https://github.com/simonc)
+* [Bo Jeanes](https://github.com/bjeanes)
+* [David Warkentin](https://github.com/ev0rtex)
+* [Duncan Beevers](https://github.com/duncanbeevers)
 * [Felipe Coury](https://github.com/fcoury)
+* [Finn Smith](https://github.com/finn)
+* [Geoff Wagstaff](https://github.com/TheDeveloper)
+* [Johannes Thoenes](https://github.com/jthoenes)
 * [Justin Mazzi](https://github.com/jmazzi)
 * [Lars Fronius](https://github.com/LarsFronius)
 * [Lee Jensen](https://github.com/outerim)
+* [Luiz Galaviz](https://github.com/MGalv)
+* [Luiz Rocha](https://github.com/lsdr)
 * [Mitchell Riley](https://github.com/mitchellvriley)
+* [Noah Kantrowitz](https://github.com/coderanger)
 * [Ryan Bigg](https://github.com/radar)
 * [Sam Beam](https://github.com/sbeam)
+* [Simon Courtois](https://github.com/simonc)
+* [Turadg Aleahmad](https://github.com/turadg)
 
 Legal Stuff
 ===========
