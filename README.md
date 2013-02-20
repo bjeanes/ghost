@@ -21,10 +21,10 @@ flush the cache.
 Command
 -------
 
-    $ ghost add mydevsite.local
+    $ sudo ghost add mydevsite.local
       [Adding] mydevsite.local -> 127.0.0.1
 
-    $ ghost add staging-server.local 67.207.136.164
+    $ sudo ghost add staging-server.local 67.207.136.164
       [Adding] staging-server.local -> 67.207.136.164
 
     $ ghost list
@@ -32,10 +32,10 @@ Command
       mydevsite.local      -> 127.0.0.1
       staging-server.local -> 67.207.136.164
 
-    $ ghost delete mydevsite.local
+    $ sudo ghost delete mydevsite.local
       [Deleting] mydevsite.local
 
-    $ ghost delete_matching test
+    $ sudo ghost delete_matching test
       [Deleting] test2.local
       [Deleting] test.local
 
@@ -43,7 +43,7 @@ Command
     Listing 1 host(s):
       staging-server.local -> 67.207.136.164
 
-    $ ghost modify staging-server.local 64.233.167.99
+    $ sudo ghost modify staging-server.local 64.233.167.99
       [Modifying] staging-server.local -> 64.233.167.99
 
     $ ghost list
