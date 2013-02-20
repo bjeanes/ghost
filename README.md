@@ -80,11 +80,10 @@ to see how to use the library.
 Installation
 ============
 
-    sudo gem install ghost
-
-If you are using RVM:
-
     gem install ghost
+    
+Using `sudo` may be necessary in some circumstances, depending on your setup 
+(for example, using the stock Ruby that comes on OS X).
 
 Contributors
 ============
