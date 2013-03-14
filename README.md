@@ -93,7 +93,7 @@ A list of contributors can be found [here](https://github.com/bjeanes/ghost/grap
 Legal Stuff
 ===========
 
-Copyright (c) 2008-2012 Bodaniel Jeanes
+Copyright (c) 2008-2013 Bodaniel Jeanes
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
