@@ -2,7 +2,7 @@ Ghost
 =====
 
 A gem that allows you to create, list, and modify local hostnames
-with ease in linux and OS (more to come)...
+with ease in Linux and other Unix-based operating systems (more to come)...
 
 Requirements
 ============
@@ -65,7 +65,7 @@ Command
     Listing 1 host(s):
       staging-server.local -> 64.233.167.99
 
-With RVM you need to add `rvmsudo` before the command:
+With RVM, you need to add `rvmsudo` before the command:
 
     $ rvmsudo ghost add mydevsite.local
       [Adding] mydevsite.local -> 127.0.0.1
