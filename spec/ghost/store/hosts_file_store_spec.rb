@@ -44,6 +44,57 @@ describe Ghost::Store::HostsFileStore do
     described_class.new('xyz').path.should == 'xyz'
   end
 
+  describe 'initialize' do
+    it 'accepts section name in option' do
+      store = described_class.new(file_path, section_name: 'spook')
+      store.section_name.should eq 'spook'
+    end
+
+    it 'rejects bad options' do
+      -> {
+        described_class.new(file_path, bad_option: 'reject me')
+      }.should raise_error(ArgumentError)
+    end
+  end
+
+  describe 'custom section name' do
+    let(:host) { Ghost::Host.new("google.com", "127.0.0.1") }
+
+    it 'uses custom section name in comment' do
+      store = described_class.new(file_path, section_name: 'spook')
+      store.add(host)
+      read.should == <<-EOF.gsub(/^\s+/,'')
+        127.0.0.1 localhost localhost.localdomain
+        # spook start
+        127.0.0.1 google.com
+        # spook end
+      EOF
+    end
+
+    it 'co-exists with other section' do
+      store = described_class.new(file_path, section_name: 'phantom')
+      store.add(host)
+      read.should == <<-EOF.gsub(/^\s+/,'')
+        127.0.0.1 localhost localhost.localdomain
+        # phantom start
+        127.0.0.1 google.com
+        # phantom end
+      EOF
+
+      store = described_class.new(file_path, section_name: 'spook')
+      store.add(host)
+      read.should == <<-EOF.gsub(/^\s+/,'')
+        127.0.0.1 localhost localhost.localdomain
+        # phantom start
+        127.0.0.1 google.com
+        # phantom end
+        # spook start
+        127.0.0.1 google.com
+        # spook end
+      EOF
+    end
+  end
+
   describe "#all" do
     context 'with no ghost-managed hosts in the file' do
       it 'returns no hosts' do
