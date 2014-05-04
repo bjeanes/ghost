@@ -12,11 +12,22 @@ module Ghost
       MAX_HOSTS_PER_LINE = 5
 
       attr_accessor :path, :file, :strict
+      attr_reader :section_name
 
-      def initialize(path = Resolv::Hosts::DefaultFileName)
+      def initialize(path = Resolv::Hosts::DefaultFileName, options = {})
         self.path = path
-        self.file = Ghost::TokenizedFile.new(path, "# ghost start", "# ghost end")
+        self.section_name = options.fetch(:section_name, 'ghost')
+        self.file = Ghost::TokenizedFile.new(self.path,
+          "# #{self.section_name} start",
+          "# #{self.section_name} end")
         self.strict = true
+      end
+
+      def section_name=(name)
+        if self.section_name
+          raise RuntimeError, "Cannot change section name"
+        end
+        @section_name = name
       end
 
       def add(host)
