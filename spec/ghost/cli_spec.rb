@@ -11,7 +11,7 @@ describe Ghost::Cli, :type => :cli do
     end
   end
 
-  describe "environment configuration" # via GHOST_OPTS (see OptionParser#environment)
+  describe "environment configuration" do; end # via GHOST_OPTS (see OptionParser#environment)
 
   describe "--version" do
     it "outputs the gem name and version" do

@@ -1,7 +1,7 @@
 require File.expand_path("#{File.dirname(__FILE__)}/../../../spec_helper.rb")
 require 'ghost/cli'
 
-describe Ghost::Cli, :type => :cli do
+describe Ghost::Cli do
   describe "import" do
     context "with current export format" do
       let(:import) do
@@ -14,8 +14,8 @@ describe Ghost::Cli, :type => :cli do
       let(:foo_com) { Ghost::Host.new('foo.com', '1.2.3.4') }
       let(:bar_com) { Ghost::Host.new('bar.com', '2.3.4.5') }
 
-      context 'with no file name'
-      context 'with STDIN pseudo file name (-)'
+      context 'with no file name' do; end
+      context 'with STDIN pseudo file name (-)' do; end
 
       context 'with a file name' do
         it 'adds each entry' do
@@ -30,7 +30,7 @@ describe Ghost::Cli, :type => :cli do
         end
       end
 
-      context 'with multiple file names'
+      context 'with multiple file names' do; end
 
       context 'when an entry is already present' do
         context 'without the -f flag' do

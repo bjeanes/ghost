@@ -1,6 +1,10 @@
 $:.unshift File.join(File.dirname(__FILE__), '..', 'lib')
 
 require 'rubygems'
-require 'rspec'
+require 'minitest/autorun'
 
-Dir[File.join(File.dirname(__FILE__), "support", "*")].each { |f| require(f) }
+Dir['./spec/support/*.rb'].each { |f| require(f) }
+
+if __FILE__ == $0
+  Dir.glob('./spec/**/*_spec.rb') { |f| require f }
+end

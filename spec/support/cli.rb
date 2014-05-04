@@ -1,17 +1,18 @@
 require 'fileutils'
 require 'tempfile'
 require 'tmpdir'
+require 'ghost/cli'
 
-module CliSpecs
-  def self.included(klass)
-    klass.before do
-      FileUtils.touch(store_path)
-      Ghost.store = store
-    end
+class CliSpec < MiniTest::Spec
+  register_spec_type(Ghost::Cli, self)
 
-    klass.let(:store_path) { File.join(Dir.tmpdir, "etc_hosts.#{Process.pid}.#{rand(9999)}") }
-    klass.let(:store)      { Ghost::Store::HostsFileStore.new(store_path) }
+  before do
+    FileUtils.touch(store_path)
+    Ghost.store = store
   end
+
+  let(:store_path) { File.join(Dir.tmpdir, "etc_hosts.#{Process.pid}.#{rand(9999)}") }
+  let(:store)      { Ghost::Store::HostsFileStore.new(store_path) }
 
   def ghost(args)
     out = StringIO.new
@@ -22,8 +23,4 @@ module CliSpecs
     out.rewind
     out.read
   end
-end
-
-RSpec.configure do |c|
-  c.include CliSpecs, :type => :cli
 end
