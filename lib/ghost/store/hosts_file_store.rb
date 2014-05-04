@@ -13,7 +13,6 @@ module Ghost
       attr_reader :section_name
 
       def initialize(path = Resolv::Hosts::DefaultFileName, options = {})
-        check_valid_keys(options, :section_name)
         self.path = path
         @section_name = options[:section_name] || 'ghost'
         self.file = Ghost::TokenizedFile.new(path,
@@ -148,15 +147,6 @@ module Ghost
 
         lines.compact.join($/)
       end
-
-      private
-
-        def check_valid_keys(hash, *keys)
-          invalid_keys = hash.keys - keys
-          if invalid_keys.any?
-            raise ArgumentError, "Unknown option keys: #{invalid_keys.inspect}"
-          end
-        end
     end
   end
 end

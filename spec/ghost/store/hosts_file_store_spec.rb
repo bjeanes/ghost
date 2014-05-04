@@ -49,12 +49,6 @@ describe Ghost::Store::HostsFileStore do
       store = described_class.new(file_path, section_name: 'spook')
       store.section_name.should eq 'spook'
     end
-
-    it 'rejects bad options' do
-      -> {
-        described_class.new(file_path, bad_option: 'reject me')
-      }.should raise_error(ArgumentError)
-    end
   end
 
   describe 'custom section name' do
