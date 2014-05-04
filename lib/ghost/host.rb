@@ -2,7 +2,7 @@ require 'socket'
 
 module Ghost
   class Host < Struct.new(:name, :ip)
-    class NotResolvable < Exception; end
+    class NotResolvable < StandardError; end
 
     alias :to_s :name
     alias :host :name
