@@ -11,7 +11,7 @@ module Ghost
     class HostsFileStore
       MAX_HOSTS_PER_LINE = 5
 
-      attr_accessor :path, :file, :strict
+      attr_accessor :path, :file
       attr_reader :section_name
 
       def initialize(path = Resolv::Hosts::DefaultFileName, options = {})
@@ -20,7 +20,6 @@ module Ghost
         self.file = Ghost::TokenizedFile.new(self.path,
           "# #{self.section_name} start",
           "# #{self.section_name} end")
-        self.strict = true
       end
 
       def section_name=(name)
