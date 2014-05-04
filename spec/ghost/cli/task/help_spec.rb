@@ -9,8 +9,8 @@ describe Ghost::Cli, :type => :cli do
 
         The ghost tasks are:
           add        Add a host
+          bust       Clear all ghost-managed hosts
           delete     Remove a ghost-managed host
-          empty      Clear all ghost-managed hosts
           export     Export all hosts in /etc/hosts format
           import     Import hosts in /etc/hosts format
           list       Show all (or a filtered) list of hosts

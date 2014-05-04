@@ -1,4 +1,4 @@
-Ghost::Cli.task :empty do
+Ghost::Cli.task :bust, :empty do
   desc "Clear all ghost-managed hosts"
 
   def perform
