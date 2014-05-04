@@ -20,6 +20,8 @@ task :gemspec do
     s.homepage          = "http://github.com/bjeanes/ghost"
     s.rubyforge_project = 'ghost'
 
+    s.licenses          = ["MIT"]
+
     s.date              = Date.today.strftime
 
     s.files             = %w(LICENSE README.md) + Dir.glob("{bin,lib,spec}/**/*")
