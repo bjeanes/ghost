@@ -10,13 +10,14 @@ module Ghost
     #       Can that be modifiied to use tokens in place of this?
     class HostsFileStore
       MAX_HOSTS_PER_LINE = 5
+      DEFAULT_SECTION_NAME = 'ghost'.freeze
 
       attr_accessor :path, :file
       attr_reader :section_name
 
       def initialize(path = Resolv::Hosts::DefaultFileName, options = {})
         self.path = path
-        self.section_name = options.fetch(:section_name, 'ghost')
+        self.section_name = options.fetch(:section_name, DEFAULT_SECTION_NAME)
         self.file = Ghost::TokenizedFile.new(self.path,
           "# #{self.section_name} start",
           "# #{self.section_name} end")
