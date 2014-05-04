@@ -49,6 +49,15 @@ describe Ghost::Store::HostsFileStore do
       store = described_class.new(file_path, section_name: 'spook')
       store.section_name.should eq 'spook'
     end
+
+    it 'can only set section name once' do
+      store = described_class.new(file_path, section_name: 'spook')
+      store.section_name.should eq 'spook'
+      -> {
+        store.section_name = 'phantom'
+      }.should raise_error(RuntimeError)
+      store.section_name.should eq 'spook'
+    end
   end
 
   describe 'custom section name' do
