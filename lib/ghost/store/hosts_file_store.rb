@@ -9,6 +9,8 @@ module Ghost
     # TODO: A lot of this duplicates Resolv::Hosts in Ruby stdlib.
     #       Can that be modifiied to use tokens in place of this?
     class HostsFileStore
+      MAX_HOSTS_PER_LINE = 5
+
       attr_accessor :path, :file, :strict
 
       def initialize(path = Resolv::Hosts::DefaultFileName)
@@ -109,8 +111,8 @@ module Ghost
         yield(Hash.new { |hash, key| hash[key] = SortedSet.new })
       end
 
-      def parse_into_buffer(lines, buffer)
-        lines.split($/).each do |line|
+      def parse_into_buffer(content, buffer)
+        content.split($/).each do |line|
           ip, hosts = *line.scan(/^\s*([^\s]+)\s+([^#]*)/).first
 
           return unless ip and hosts
@@ -135,10 +137,11 @@ module Ghost
 
       def content(buffer)
         ips   = buffer.keys.sort
-        lines = ips.map do |ip|
-          unless (hosts = buffer[ip]).empty?
-            "#{ip} #{buffer[ip].to_a.join(" ")}"
-          end
+        lines = ips.flat_map do |ip|
+          buffer \
+            .fetch(ip, []) \
+            .each_slice(MAX_HOSTS_PER_LINE) \
+            .map { |hosts| [ip, *hosts].join(' ') }
         end
 
         lines.compact.join($/)

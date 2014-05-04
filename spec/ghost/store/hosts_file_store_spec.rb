@@ -120,6 +120,7 @@ describe Ghost::Store::HostsFileStore do
         <<-EOF.gsub(/^\s+/,'')
           127.0.0.1 localhost localhost.localdomain
           # ghost start
+          1.2.3.4 a.com b.com c.com d.com e.com
           192.168.1.1 github.com
           # ghost end
         EOF
@@ -133,7 +134,22 @@ describe Ghost::Store::HostsFileStore do
           read.should == <<-EOF.gsub(/^\s+/,'')
             127.0.0.1 localhost localhost.localdomain
             # ghost start
+            1.2.3.4 a.com b.com c.com d.com e.com
             192.168.1.1 github.com google.com
+            # ghost end
+          EOF
+        end
+
+        it 'limits hosts per line to 5' do
+          host = Ghost::Host.new('f.com', '1.2.3.4')
+
+          store.add(host)
+          read.should == <<-EOF.gsub(/^\s+/,'')
+            127.0.0.1 localhost localhost.localdomain
+            # ghost start
+            1.2.3.4 a.com b.com c.com d.com e.com
+            1.2.3.4 f.com
+            192.168.1.1 github.com
             # ghost end
           EOF
         end
@@ -149,6 +165,7 @@ describe Ghost::Store::HostsFileStore do
           read.should == <<-EOF.gsub(/^\s+/,'')
             127.0.0.1 localhost localhost.localdomain
             # ghost start
+            1.2.3.4 a.com b.com c.com d.com e.com
             127.0.0.1 google.com
             192.168.1.1 github.com
             # ghost end
