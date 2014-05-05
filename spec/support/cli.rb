@@ -10,7 +10,7 @@ module CliSpecs
     end
 
     klass.let(:store_path) { File.join(Dir.tmpdir, "etc_hosts.#{Process.pid}.#{rand(9999)}") }
-    klass.let(:store)      { Ghost::Store::HostsFileStore.new(store_path) }
+    klass.let(:store)      { Ghost::Store::HostsFileStore.new(section_name: 'ghost', path: store_path) }
   end
 
   def ghost(args)

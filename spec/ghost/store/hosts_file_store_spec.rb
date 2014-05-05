@@ -24,7 +24,7 @@ describe Ghost::Store::HostsFileStore do
   subject { store }
 
   let(:file_path) { File.join(Dir.tmpdir, "etc_hosts.#{Process.pid}.#{rand(9999)}") }
-  let(:store)     { described_class.new(file_path) }
+  let(:store)     { described_class.new(section_name: 'ghost', path: file_path) }
   let(:contents) do
     <<-EOF.unindent
     127.0.0.1 localhost localhost.localdomain
@@ -34,24 +34,24 @@ describe Ghost::Store::HostsFileStore do
   before { write(contents) }
 
   it 'manages the default file of /etc/hosts when no file path is provided' do
-		previous_hosts_location = Resolv::Hosts::DefaultFileName
-		Resolv::Hosts::DefaultFileName = "hosts_location"
-    described_class.new.path.should == "hosts_location"
-		Resolv::Hosts::DefaultFileName = previous_hosts_location
+    previous_hosts_location = described_class::DEFAULT_FILE
+    described_class::DEFAULT_FILE = "hosts_location"
+    described_class.new(section_name: 'ghost').path.should == "hosts_location"
+    described_class::DEFAULT_FILE = previous_hosts_location
   end
 
   it 'manages the file at the provided path when given' do
-    described_class.new('xyz').path.should == 'xyz'
+    described_class.new(section_name: 'ghost', path: 'xyz').path.should == 'xyz'
   end
 
   describe 'initialize' do
     it 'accepts section name in option' do
-      store = described_class.new(file_path, section_name: 'spook')
+      store = described_class.new(section_name: 'spook')
       store.section_name.should eq 'spook'
     end
 
     it 'can only set section name once' do
-      store = described_class.new(file_path, section_name: 'spook')
+      store = described_class.new(path: file_path, section_name: 'spook')
       store.section_name.should eq 'spook'
       -> {
         store.section_name = 'phantom'
@@ -64,7 +64,7 @@ describe Ghost::Store::HostsFileStore do
     let(:host) { Ghost::Host.new("google.com", "127.0.0.1") }
 
     it 'uses custom section name in comment' do
-      store = described_class.new(file_path, section_name: 'spook')
+      store = described_class.new(path: file_path, section_name: 'spook')
       store.add(host)
       read.should == <<-EOF.gsub(/^\s+/,'')
         127.0.0.1 localhost localhost.localdomain
@@ -75,7 +75,7 @@ describe Ghost::Store::HostsFileStore do
     end
 
     it 'co-exists with other section' do
-      store = described_class.new(file_path, section_name: 'phantom')
+      store = described_class.new(path: file_path, section_name: 'phantom')
       store.add(host)
       read.should == <<-EOF.gsub(/^\s+/,'')
         127.0.0.1 localhost localhost.localdomain
@@ -84,7 +84,7 @@ describe Ghost::Store::HostsFileStore do
         # phantom end
       EOF
 
-      store = described_class.new(file_path, section_name: 'spook')
+      store = described_class.new(path: file_path, section_name: 'spook')
       store.add(host)
       read.should == <<-EOF.gsub(/^\s+/,'')
         127.0.0.1 localhost localhost.localdomain

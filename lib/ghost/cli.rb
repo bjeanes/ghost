@@ -1,14 +1,16 @@
 require 'ghost'
+require 'ghost/store'
 
 require 'optparse'
 require 'optparse/version'
 
 module Ghost
   class Cli
-    attr_accessor :out, :parser
+    attr_accessor :out, :parser, :store
 
     def initialize(out = STDOUT)
-      self.out  = out
+      self.store = Ghost::Store::HostsFileStore.new(section_name: 'ghost')
+      self.out   = out
 
       setup_parser
     end

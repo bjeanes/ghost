@@ -3,7 +3,7 @@ require 'unindent'
 module Ghost
   class Cli
     class Task
-      attr_accessor :out
+      attr_accessor :out, :store
 
       class << self
         attr_accessor :name
@@ -25,8 +25,9 @@ module Ghost
         end
       end
 
-      def initialize(out)
-        self.out = out
+      def initialize(store, out)
+        self.store = store
+        self.out   = out
       end
 
       def perform(*); end
@@ -49,8 +50,9 @@ module Ghost
       end
     end
 
+
     def tasks
-      @tasks ||= Hash[self.class.tasks.map { |name, task| [name, task.new(out)] }]
+      @tasks ||= Hash[self.class.tasks.map { |name, task| [name, task.new(store, out)] }]
     end
 
     class << self
