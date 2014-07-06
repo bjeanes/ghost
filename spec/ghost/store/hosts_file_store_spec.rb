@@ -333,6 +333,19 @@ describe Ghost::Store::HostsFileStore do
             EOF
           end
         end
+
+        context 'using a partial string to identify host' do
+          let(:host) { "googl" }
+
+          it 'returns empty array' do
+            store.delete(host).should == []
+          end
+
+          it 'does not modify the host file' do
+            store.delete(host)
+            read.should == contents
+          end
+        end
       end
 
       context 'when trying to delete a non-ghost entry' do
