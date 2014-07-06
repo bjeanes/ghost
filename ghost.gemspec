@@ -1,14 +1,14 @@
 # -*- encoding: utf-8 -*-
-# stub: ghost 1.0.0.pre.2 ruby lib
+# stub: ghost 1.0.0 ruby lib
 
 Gem::Specification.new do |s|
   s.name = "ghost"
-  s.version = "1.0.0.pre.2"
+  s.version = "1.0.0"
 
-  s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
+  s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib"]
   s.authors = ["Bodaniel Jeanes"]
-  s.date = "2014-05-04"
+  s.date = "2014-07-06"
   s.description = "Allows you to create, list, and modify local hostnames on POSIX systems (e.g. Mac OS X and Linux) and Windows"
   s.email = "me@bjeanes.com"
   s.executables = ["ghost"]
