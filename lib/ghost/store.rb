@@ -3,7 +3,7 @@ module Ghost
     attr_accessor :store
 
     def store
-      @store ||= Ghost::Store::HostsFileStore.new
+      @store ||= Ghost::Store::HostsFileStore.new(section_name: 'ghost')
     end
   end
 end
